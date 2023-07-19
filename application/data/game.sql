@@ -12,7 +12,7 @@ CREATE TABLE IF NOT EXISTS `gs_admin_user` (
   `status` tinyint(1) unsigned NOT NULL DEFAULT '1' COMMENT '0：停用 1：可用',
   `remark` varchar(128) DEFAULT NULL,
   PRIMARY KEY (`id`),
-  UNIQUE KEY `name_unique` (`name`)
+  UNIQUE KEY `name_unique` (`user_name`)
 ) ENGINE=innodb DEFAULT CHARSET=utf8mb4 COMMENT='管理员用户表';
 
 CREATE TABLE IF NOT EXISTS `gs_user` (
@@ -125,20 +125,21 @@ CREATE TABLE IF NOT EXISTS `gs_node` (
   KEY `region_id` (`region_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='服务节点列表';
 
-CREATE TABLE  IF NOT EXISTS `gs_order` (
+CREATE TABLE IF NOT EXISTS `gs_order` (
   `id` int(11) unsigned NOT NULL AUTO_INCREMENT COMMENT '主键ID',
   `user_id` int(11) UNSIGNED NULL DEFAULT 0 COMMENT '用户id',
-  `order_no` varchar(36) NOT NULL COMMENT '订单号',
-  'order_type' varchar(36) NOT NULL COMMENT '订单业务类型',
-  `total_amount` int(11) NOT NULL COMMENT '订单支付总金额(分)',
+  `order_no` varchar(36) NOT NULL DEFAULT '' COMMENT '订单号',
+  `order_type` varchar(36) NOT NULL DEFAULT '' COMMENT '订单业务类型',
+  `total_amount` int(11) NOT NULL DEFAULT '0' COMMENT '订单支付总金额(分)',
   `invite_user_id` int(11) DEFAULT NULL COMMENT '邀请的用户id',
   `commission_balance` int(11) NOT NULL DEFAULT '0' COMMENT '佣金',
   `pay_type` tinyint(4) unsigned NOT NULL COMMENT '支付类型',
-  `status` tinyint(1) NOT NULL DEFAULT '0' COMMENT '0待支付1已完成2已取消',
+  `status` tinyint(1) NOT NULL DEFAULT '0' COMMENT '0:待支付 1:已完成 2:已取消',
   `create_time` int(11) unsigned NOT NULL DEFAULT '0' COMMENT '创建时间',
   `update_time` int(11) unsigned NOT NULL DEFAULT '0' COMMENT '更新时间',
   `pay_time` int(11) DEFAULT '0' COMMENT '支付时间',
   PRIMARY KEY (`id`),
+  KEY `order_no` (`order_no`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='订单列表';
 
 CREATE TABLE IF NOT EXISTS `gs_payment_info` (
@@ -156,8 +157,10 @@ CREATE TABLE IF NOT EXISTS `gs_payment_info` (
   `return_msg` varchar(1000) DEFAULT NULL COMMENT '支付返回信息',
   `remark` varchar(255) DEFAULT NULL,
   `field1` varchar(255) DEFAULT NULL,
-  `field2` varchar(255) DEFAULT NULL
-) ENGINE=InnoDB CHARSET=utf8mb4 DEFAULT CHARSET=utf8;
+  `field2` varchar(255) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `trade_number` (`trade_number`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='支付信息列表';
 
 -- 第二阶段
 -- 第二阶段
