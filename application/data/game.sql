@@ -233,6 +233,8 @@ CREATE TABLE IF NOT EXISTS `gs_payment` (
   `create_time` int(11) unsigned NOT NULL DEFAULT '0' COMMENT '创建时间',
   `update_time` int(11) unsigned NOT NULL DEFAULT '0' COMMENT '更新时间',
   `remark` varchar(255) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `name` (`name`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='支付配置';
 
 CREATE TABLE IF NOT EXISTS `gs_user_oauth` (
