@@ -1,6 +1,6 @@
 <?php
 
-class PayBaseModel
+class GameBaseModel
 {
     public static $_instance;
     public static $_local_instance;
@@ -107,11 +107,6 @@ class PayBaseModel
         }
 
         return self::getInstance()->get($this->_table, $column, $where);
-    }
-
-    public function getInfoById($id = '', $column = [])
-    {
-        return $this->find($id, $column);
     }
 
     public function has($where = [], $join = null)
@@ -317,6 +312,11 @@ class PayBaseModel
     public function getQueryFiled()
     {
         return $this->_queryFiled;
+    }
+
+    public function getInfoById($id = '', $column = [])
+    {
+        return $this->find($id, $column);
     }
 
     public function getInfoByWhere($where, $column = '*')

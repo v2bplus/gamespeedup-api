@@ -4,6 +4,7 @@ CREATE TABLE IF NOT EXISTS `gs_admin_user` (
   `id` smallint(6) unsigned NOT NULL AUTO_INCREMENT,
   `user_name` varchar(128) DEFAULT NULL COMMENT '登陆用户名',
   `real_name` varchar(255) DEFAULT NULL COMMENT '真实名字',
+  `email` varchar(255) NOT NULL DEFAULT '' COMMENT '管理员邮箱地址',
   `password` varchar(255) DEFAULT NULL COMMENT '管理员用户密码',
   `create_time` int(11) unsigned DEFAULT NULL COMMENT '创建时间',
   `update_time` int(11) unsigned DEFAULT NULL COMMENT '更新时间',
@@ -35,6 +36,16 @@ CREATE TABLE IF NOT EXISTS `gs_user` (
   KEY `email` (`email`),
   KEY `mobile` (`mobile`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1000 DEFAULT CHARSET=utf8mb4 COMMENT='用户表';
+
+CREATE TABLE IF NOT EXISTS `gs_user_group` (
+  `id` int(11) unsigned NOT NULL AUTO_INCREMENT COMMENT '主键ID',
+  `name` varchar(255) NOT NULL,
+  `attribute` text NOT NULL COMMENT '用户组权益',
+  `remark` varchar(255) NOT NULL DEFAULT '' COMMENT '备注',
+  `create_time` int(11) unsigned NOT NULL DEFAULT '0' COMMENT '创建时间',
+  `update_time` int(11) unsigned NOT NULL DEFAULT '0' COMMENT '更新时间',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='用户权限组';
 
 CREATE TABLE IF NOT EXISTS `gs_user_vip` (
   `id` int(11) unsigned NOT NULL AUTO_INCREMENT COMMENT '主键ID',
@@ -81,6 +92,7 @@ CREATE TABLE IF NOT EXISTS `gs_user_real` (
 CREATE TABLE IF NOT EXISTS `gs_region` (
   `id` int(11) unsigned NOT NULL AUTO_INCREMENT COMMENT '主键ID',
   `name` int(11) unsigned NOT NULL DEFAULT '0' COMMENT '节点的区域名字',
+  `remark` varchar(255) NOT NULL DEFAULT '' COMMENT '备注名字',
   -- `is_free` int(11) unsigned NOT NULL DEFAULT '0' COMMENT '是否免费',
   `create_time` int(11) unsigned NOT NULL DEFAULT '0' COMMENT '创建时间',
   `update_time` int(11) unsigned NOT NULL DEFAULT '0' COMMENT '更新时间',
@@ -161,6 +173,8 @@ CREATE TABLE IF NOT EXISTS `gs_payment_info` (
   PRIMARY KEY (`id`),
   KEY `trade_number` (`trade_number`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='支付信息列表';
+
+INSERT INTO `gs_admin_user` (`id`, `user_name`, `real_name`, `password`,`create_time`,`update_time`,`last_login_time`,`status`) VALUES (1, 'admin', '默认管理员', '$2y$10$FJAKYIXnRhXPLFbhBjLNI.EB0ZMwlyWeCZAOM56FcMyriez.DT9sS', 0, 0,0, 1);
 
 -- 第二阶段
 -- 第二阶段
@@ -251,16 +265,6 @@ CREATE TABLE IF NOT EXISTS `gs_user_oauth` (
   KEY `oauth_type` (`oauth_type`),
   KEY `oauth_type_2` (`oauth_type`,`oauth_id`) USING BTREE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='第三方用户信息表';
-
-CREATE TABLE IF NOT EXISTS `gs_user_group` (
-  `id` int(11) unsigned NOT NULL AUTO_INCREMENT COMMENT '主键ID',
-  `name` varchar(255) NOT NULL,
-  `attribute` text NOT NULL COMMENT '用户组权益',
-  `remark` varchar(255) NOT NULL DEFAULT '' COMMENT '备注',
-  `create_time` int(11) unsigned NOT NULL DEFAULT '0' COMMENT '创建时间',
-  `update_time` int(11) unsigned NOT NULL DEFAULT '0' COMMENT '更新时间',
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='用户权限组';
 
 CREATE TABLE IF NOT EXISTS `gs_user_reg_logs` (
   `id` int(11) unsigned NOT NULL AUTO_INCREMENT COMMENT '主键ID',
