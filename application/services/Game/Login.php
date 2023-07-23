@@ -16,7 +16,7 @@ class Login extends \Service
     public static function adminLogin($emailOrName, $pwd)
     {
         try {
-            $adminModel = new \GameAdminUser();
+            $adminModel = new \GameAdminUserModel();
             $where = [
                 'OR' => [
                     'user_name' => $emailOrName,
