@@ -175,6 +175,7 @@ CREATE TABLE IF NOT EXISTS `gs_payment_info` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='支付信息列表';
 
 INSERT INTO `gs_admin_user` (`id`, `user_name`, `real_name`, `password`,`create_time`,`update_time`,`last_login_time`,`status`) VALUES (1, 'admin', '默认管理员', '$2y$10$FJAKYIXnRhXPLFbhBjLNI.EB0ZMwlyWeCZAOM56FcMyriez.DT9sS', 0, 0,0, 1);
+INSERT INTO `gs_user_group` (`id`, `name`, `remark`, `create_time`, `update_time`, `attribute`) VALUES (1, '默认', '默认组', 0, 0, '{\"commission_rate\":5}');
 
 -- 第二阶段
 -- 第二阶段
