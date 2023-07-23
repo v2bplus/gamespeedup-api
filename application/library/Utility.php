@@ -113,6 +113,9 @@ class Utility
 
     public static function removeXss($val)
     {
+        if (!$val) {
+            return $val;
+        }
         $val = preg_replace('/([\x00-\x08][\x0b-\x0c][\x0e-\x20])/', '', $val);
         $search = 'abcdefghijklmnopqrstuvwxyz';
         $search .= 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
