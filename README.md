@@ -29,7 +29,7 @@ docker-compose logs
 
 ```bash
 docker exec -it GAME_php82 sh
-cd /www/pay_api/
+cd /www/admin_api/
 ## 初始化目录
 php application/bin/install.php
 ## 修改配置文件

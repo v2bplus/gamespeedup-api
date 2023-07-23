@@ -6,6 +6,7 @@ abstract class GameAbstract extends CommonAbstract
 {
     public $uid = 0;
     public $user = [];
+    public $needLogin = true;
 
     public function init()
     {

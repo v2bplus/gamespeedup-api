@@ -6,6 +6,6 @@ class IndexController extends \CoreController\AppAbstract
 
     public function indexAction()
     {
-        Response::appJson(API_CODE_SUCCESS, 'App首页', []);
+        Response::appJson(GAME_APP_CODE_SUCCESS, 'App首页', []);
     }
 }
