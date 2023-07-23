@@ -20,10 +20,7 @@ class Cache
 
     public static function get($name)
     {
-        var_dump(self::getInstance());
-        exit;
-
-        return self::getInstance()->getItem($name);
+        return self::getInstance()->getItem($name)->get();
     }
 
     public static function check($name)
@@ -33,19 +30,10 @@ class Cache
 
     public static function set($name, $data, $maxLifetime = 0)
     {
-        var_dump(self::getInstance());
-        exit;
-
-        // $cache = self::getInstance()->getItem($name);
-        $cache->set($data);
-        // if ($tag) {
-        //     $cache->addTag($tag);
-        // }
-        if ($maxLifetime) {
-            $cache->expiresAfter($maxLifetime);
+        if (!$maxLifetime) {
+            return self::getInstance()->getItem($name)->set($data);
         }
-
-        return self::getInstance()->save($cache);
+        return self::getInstance()->getItem($name)->set($data)->expiresAfter($maxLifetime);
     }
 
     public static function update($name, $newVal, $maxLifetime = 0, $isMerge = true)

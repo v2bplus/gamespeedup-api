@@ -10,6 +10,7 @@ class Login extends \Service
     public const USER_TOKEN_FILED = 'Access-Token';
 
     public const ROLE_ADMIN = 'admin';
+    public const ROLE_USER = 'user';
 
     public const USER_LOGIN_TOKEN_TIME = 86400 * 7;
 
@@ -48,7 +49,7 @@ class Login extends \Service
                 'user_id' => $userId,
                 'user_name' => $adminInfo['user_name'],
                 'token' => $token,
-                'email' => $userInfo['email'],
+                'email' => $adminInfo['email'],
                 'role' => $role,
             ];
 
