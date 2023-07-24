@@ -33,7 +33,7 @@ class Cache
         $item = self::getInstance()->getItem($name);
         $item->set($data);
         if (!$maxLifetime) {
-            $item = $item->expiresAfter($ttl);
+            $item = $item->expiresAfter($maxLifetime);
         }
         return self::getInstance()->save($item);
     }
