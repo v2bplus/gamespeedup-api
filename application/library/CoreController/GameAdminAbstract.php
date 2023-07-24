@@ -74,7 +74,7 @@ abstract class GameAdminAbstract extends CommonAbstract
         if (!$info) {
             return false;
         }
-        $this->uid = $info['uid'] ?? 0;
+        $this->adminId = $info['uid'] ?? 0;
         $this->isAdmin = $info['isAdmin'] ?? false;
 
         return true;

@@ -33,9 +33,10 @@ class Login extends \Service
                 throw new \Exception('密码不正确');
             }
             $userId = $id = $adminInfo['id'];
+            //Cache
             $info = [
                 'id' => $id,
-                'user_id' => $userId,
+                'uid' => $userId,
                 'user_name' => $adminInfo['user_name'],
                 'email' => $adminInfo['email'],
                 'role' => $role,
