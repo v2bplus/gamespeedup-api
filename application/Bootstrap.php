@@ -174,9 +174,7 @@ class Bootstrap extends Yaf_Bootstrap_Abstract
             $config->setOptPrefix(PROJECT_NAME.'_');
 
             CacheManager::setDefaultConfig(new ConfigurationOption([
-                "useStaticItemCaching" => false,
-                "path" => CACHE_PATH,
-                "fallback" => 'files',
+                "useStaticItemCaching" => false
             ]));
             $cacheinstance = CacheManager::getInstance('Redis', $config);
             Yaf_Registry::set('_cache', $cacheinstance);
