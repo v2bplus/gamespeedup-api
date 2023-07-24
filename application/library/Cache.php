@@ -40,29 +40,22 @@ class Cache
 
     public static function update($name, $newVal, $maxLifetime = 0, $isMerge = true)
     {
-        var_dump(self::getInstance());
-        exit;
-
-        // $cache = self::getInstance()->getItem($name);
-        $value = $cache->get();
-        if (is_array($value) && is_array($value)) {
+        $item = self::getInstance()->getItem($name);
+        $value = $item->get();
+        if (is_array($value) && is_array($newVal) && $isMerge) {
             $newVal = array_merge($value, $newVal);
         }
-        $cache->set($newVal);
-        if ($maxLifetime) {
-            $cache->expiresAfter($maxLifetime);
+        $item->set($newVal);
+        if ($maxLifetime > 0) {
+            $item = $item->expiresAfter($maxLifetime);
         }
 
-        return self::getInstance()->save($cache);
+        return self::getInstance()->save($item);
     }
 
     public static function del($name)
     {
-        // todo
-        // 官方的deleteitem 有bug 暂时先用过期时间实现
-        // $cache = self::getInstance()->getItem($name)->set(false)->expiresAfter(1);
-
-        return self::getInstance()->save($cache);
+        return self::getInstance()->deleteItem($name);
     }
 
     public static function deleteAll()

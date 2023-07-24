@@ -39,7 +39,7 @@ CREATE TABLE IF NOT EXISTS `gs_user` (
 
 CREATE TABLE IF NOT EXISTS `gs_user_group` (
   `id` int(11) unsigned NOT NULL AUTO_INCREMENT COMMENT '主键ID',
-  `name` varchar(255) NOT NULL,
+  `name` varchar(255) NULL DEFAULT '' COMMENT '名称',
   `attribute` text NOT NULL COMMENT '用户组权益',
   `remark` varchar(255) NOT NULL DEFAULT '' COMMENT '备注',
   `create_time` int(11) unsigned NOT NULL DEFAULT '0' COMMENT '创建时间',

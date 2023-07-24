@@ -145,7 +145,7 @@ class AdminUser extends \Service
     {
         try {
             $userModel = new \GameAdminUserModel();
-            $info = $userModel->getInfoById($uid, ['id', 'email', 'uuid', 'mobile', 'expire_time', 'php_password']);
+            $info = $userModel->getInfoById($uid, ['id', 'user_name', 'real_name', 'mobile', 'last_login_time', 'last_login_ip']);
             if (!$info) {
                 throw new \Exception('信息不存在');
             }

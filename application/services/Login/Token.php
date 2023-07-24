@@ -7,11 +7,12 @@ class Token extends \Service
     public const TOKEN_CACHE_TIME = 86400 * 7;
     public const TOKEN_FILED = 'Token';
 
-    public static function login($userInfo, $tokenTime = self::TOKEN_CACHE_TIME)
+    public static function login($userInfo, $tokenTime = self::TOKEN_CACHE_TIME, $cacheTime = 0)
     {
         $token = self::makeToken((int) $userInfo['id']);
         \Cache::set($token, [
             'user' => $userInfo,
+            'cache_time' => $cacheTime,
             'is_login' => true,
         ], $tokenTime);
 
