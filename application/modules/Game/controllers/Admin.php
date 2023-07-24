@@ -231,7 +231,7 @@ class AdminController extends \CoreController\GameAdminAbstract
     public function plan_updateAction()
     {
         $id = $this->getPost('id', 0);
-        $name = $this->getPost('name', null);
+        $name = $this->getPost('plan_name', null);
         $money = $this->getPost('money', 0);
         $day_time = $this->getPost('day_time', 0);
         $gift_day_time = $this->getPost('gift_day_time', 0);
@@ -285,14 +285,22 @@ class AdminController extends \CoreController\GameAdminAbstract
         Response::renderJson(GAME_ADMIN_STATUS_SUCCESS, '处理成功', $detail['data']);
     }
 
+    public function user_listAction()
+    {
+        $detail = User::getAll($this->page, $this->pageSize, $this->sortInfo);
+        if (1 !== $detail['status']) {
+            Response::renderJson(GAME_ADMIN_STATUS_ERROR, $detail['msg']);
+        }
+        Response::renderJson(GAME_ADMIN_STATUS_SUCCESS, '处理成功', $detail['data']);
+    }
+
     public function user_addAction()
     {
-        $password = $this->getPost('password', null);
         $expire = $this->getPost('expire_date', null);
+        $email = $this->getPost('email', null);
         $mobile = $this->getPost('mobile', null);
         $post = [
             'email' => $email,
-            'password' => $password,
             'expire' => $expire,
             'mobile' => $mobile,
         ];

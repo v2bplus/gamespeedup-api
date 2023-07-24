@@ -75,7 +75,7 @@ class User extends \Service
     }
 
 
-    public static function getAll($page, $pageSize, $order, $user)
+    public static function getAll($page, $pageSize, $order)
     {
         try {
             $where = [];

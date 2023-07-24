@@ -53,7 +53,7 @@ class Plan extends \Service
             }
 
             $update = [];
-            $update['name'] = $post['name'];
+            $update['plan_name'] = $post['plan_name'];
             isset($post['money']) && $update['money'] = $post['money'];
             isset($post['day_time']) && $update['day_time'] = $post['day_time'];
             isset($post['gift_day_time']) && $update['gift_day_time'] = $post['gift_day_time'];

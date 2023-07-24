@@ -41,7 +41,7 @@ class Login extends \Service
                 'email' => $adminInfo['email'],
                 'role' => $role,
             ];
-            $token = Token::login($info, self::USER_LOGIN_TOKEN_TIME);
+            $token = Token::login($info, self::USER_LOGIN_TOKEN_TIME,time());
             if (!$token) {
                 throw new \Exception('登陆失败');
             }
@@ -154,6 +154,9 @@ class Login extends \Service
         if (!$userInfo) {
             return $return;
         }
+        // todo
+        // 判断cachetime 时长
+        // 少于一天 续费缓存时间
         $return['uid'] = $userInfo['user']['id'] ?? 0;
         $return['role'] = $userInfo['user']['role'] ?? '';
 
