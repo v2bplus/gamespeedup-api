@@ -2,10 +2,13 @@
 
 use Phpfastcache\CacheManager;
 use Phpfastcache\Drivers\Redis\Config as RedisConfig;
+use Phpfastcache\Config\ConfigurationOption;
 use Phpfastcache\Helper\Psr16Adapter;
 
 class Bootstrap extends Yaf_Bootstrap_Abstract
 {
+    public $_bootType = 'web';
+    public $_config ;
     public function _initTimeZone()
     {
         date_default_timezone_set('Asia/Shanghai');
@@ -169,6 +172,12 @@ class Bootstrap extends Yaf_Bootstrap_Abstract
                 $config->setDefaultTtl($redisConfig['ttl']);
             }
             $config->setOptPrefix(PROJECT_NAME.'_');
+
+            CacheManager::setDefaultConfig(new ConfigurationOption([
+                "useStaticItemCaching" => false,
+                "path" => CACHE_PATH,
+                "fallback" => 'files',
+            ]));
             $cacheinstance = CacheManager::getInstance('Redis', $config);
             Yaf_Registry::set('_cache', $cacheinstance);
         }
