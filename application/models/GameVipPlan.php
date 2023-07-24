@@ -12,24 +12,28 @@ class GameVipPlanModel extends GameBaseModel
     {
         if ($id) {
             $where = [
-                'name' => $name,
+                'plan_name' => $name,
                 'id[!]' => $id,
             ];
         } else {
             $where = [
-                'name' => $name,
+                'plan_name' => $name,
             ];
         }
 
         return $this->has($where, $join = null);
     }
 
-    public function addData($userInfo = [])
+    public function addData($info = [])
     {
         $addArray = [];
-        $addArray['user_name'] = $userInfo['user_name'];
-        $addArray['mobile'] = $userInfo['mobile'] ?? null;
-        $addArray['password'] = $userInfo['password'];
+        $addArray['plan_name'] = $info['plan_name'];
+        $addArray['money'] = $info['money'];
+        $addArray['day_time'] = $info['day_time'];
+
+        $addArray['gift_day_time'] = $info['gift_day_time'] ?? 0;
+        $addArray['content'] = $info['content'];
+        $addArray['show'] = $info['show'];
 
         $addArray['create_time'] = time();
         $addArray['update_time'] = time();
@@ -43,22 +47,24 @@ class GameVipPlanModel extends GameBaseModel
         $array = [
             'update_time' => time(),
         ];
-        if (isset($post['password'])) {
-            $array['password'] = $post['password'];
+        if (isset($post['plan_name'])) {
+            $array['plan_name'] = $post['plan_name'];
         }
-
-        if (isset($post['group_id'])) {
-            $array['group_id'] = $post['group_id'];
+        if (isset($post['money'])) {
+            $array['money'] = $post['money'];
         }
-
-        if (isset($post['remark'])) {
-            $array['remark'] = $post['remark'];
+        if (isset($post['day_time'])) {
+            $array['day_time'] = $post['day_time'];
         }
-
+        if (isset($post['gift_day_time'])) {
+            $array['gift_day_time'] = $post['gift_day_time'];
+        }
         if (isset($post['expire_time'])) {
             $array['expire_time'] = $post['expire_time'];
         }
-
+        if (isset($post['show'])) {
+            $array['show'] = $post['show'];
+        }
         if (!$array) {
             return false;
         }
