@@ -59,7 +59,7 @@ class Common extends \Service
         }
     }
 
-    public static function sendCaptcha($storeId, $mobile, $code = null, $key = null)
+    public static function sendCaptcha($mobile, $code = null, $key = null)
     {
         try {
             if ($code && $key) {
@@ -75,7 +75,7 @@ class Common extends \Service
             $smsCaptcha = CaptchaApi::createSMS($mobile);
             // 发送短信
             $params = ['code' => $smsCaptcha['code']];
-            $rs = self::sendSms('captcha', $mobile, $params, $storeId);
+            $rs = self::sendSms('captcha', $mobile, $params);
             if ($rs['status'] != 1) {
                 throw new \Exception($rs['msg']);
             }
@@ -112,7 +112,7 @@ class Common extends \Service
         }
     }
 
-    private static function sendSms($sceneValue, $acceptPhone, $templateParams, $storeId)
+    private static function sendSms($sceneValue, $acceptPhone, $templateParams)
     {
         try {
 

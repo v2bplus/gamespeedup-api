@@ -25,6 +25,15 @@ class LoginController extends \CoreController\GameAbstract
         Response::appJson(GAME_USER_STATUS_SUCCESS, ' Ping', []);
     }
 
+    public function imageAction()
+    {
+        $rs = Common::captcha();
+        if ($rs['status'] !== 1) {
+            Response::renderJson(GAME_USER_STATUS_ERROR, $rs['msg']);
+        }
+        Response::renderJson(GAME_USER_STATUS_SUCCESS, 'success', $rs['data']);
+    }
+
     public function codeAction()
     {
         $info = Common::code();
@@ -32,6 +41,38 @@ class LoginController extends \CoreController\GameAbstract
             Response::renderJson(GAME_USER_STATUS_ERROR, $info['msg']);
         }
         Response::renderJson(GAME_USER_STATUS_SUCCESS, '成功', $info['data']);
+    }
+
+    public function sendsmsAction()
+    {
+        $mobile = $this->getPost('mobile', null);
+        $captchaCode = $this->getPost('captchaCode', null);
+        $captchaKey = $this->getPost('captchaKey', null);
+        $post = [
+            'mobile' => $mobile,
+            'captchaCode' => $captchaCode,
+            'captchaKey' => $captchaKey,
+        ];
+        $rules = [
+            'mobile' => [
+                ['required', 'message' => '手机号不能为空'],
+            ],
+            'captchaCode' => [
+                ['required', 'message' => '验证码code不能为空'],
+            ],
+            'captchaKey' => [
+                ['required', 'message' => '验证码key不能为空'],
+            ],
+        ];
+        $rs = Validator::customerValidate($post, $rules);
+        if (!$rs->validate()) {
+            Response::renderJson(GAME_USER_STATUS_ERROR, '验证错误', $rs->errors());
+        }
+        $rs = Common::sendCaptcha($mobile, $captchaCode, $captchaKey);
+        if ($rs['status'] !== 1) {
+            Response::renderJson(GAME_USER_STATUS_ERROR, $rs['msg']);
+        }
+        Response::renderJson(GAME_USER_STATUS_SUCCESS, 'success', $rs['data']);
     }
 
     public function registerAction()
