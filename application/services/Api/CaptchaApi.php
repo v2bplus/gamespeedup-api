@@ -99,7 +99,7 @@ class CaptchaApi extends Service
         }
     }
 
-    protected static function generateCode()
+    public static function generateCode()
     {
         $characters = is_string(self::$characters) ? str_split(self::$characters) : self::$characters;
         $bag = [];
@@ -173,36 +173,36 @@ class CaptchaApi extends Service
         return ['phone' => $phone, 'code' => $code];
     }
 
-    // public static function record($mobile)
-    // {
-    //     $cacheKey = "sendCaptchaSMS.$mobile";
-    //     $check = Cache::check($cacheKey);
-    //     if (!$check) {
-    //         $rs = Cache::set($cacheKey, [
-    //             'times' => self::$checkTimes - 1,
-    //         ], self::$safeTime);
-    //         return [
-    //             'status' => 1,
-    //             'data' => [],
-    //             'msg' => 'success'
-    //         ];
-    //     }
-    //     $record = Cache::get($cacheKey);
-    //     $times = $record['times'] ?? 0;
-    //     // 判断发送次数是否合法
-    //     if ($times <= 0) {
-    //         if (ENVIRON != 'dev') {
-    //             throw new Exception('很抱歉，已超出今日最大发送次数限制');
-    //         }
-    //     }
-    //     // 发送次数递减
-    //     Cache::update($cacheKey, ['times' => $record['times'] - 1]);
-    //     return [
-    //         'status' => 1,
-    //         'data' => [],
-    //         'msg' => 'success'
-    //     ];
-    // }
+    public static function record($mobile)
+    {
+        $cacheKey = "sendCaptchaSMS.$mobile";
+        $check = Cache::check($cacheKey);
+        if (!$check) {
+            $rs = Cache::set($cacheKey, [
+                'times' => self::$checkMaxTimes - 1,
+            ], self::$safeTime);
+            return [
+                'status' => 1,
+                'data' => [],
+                'msg' => 'success'
+            ];
+        }
+        $record = Cache::get($cacheKey);
+        $times = $record['times'] ?? 0;
+        // 判断发送次数是否合法
+        if ($times <= 0) {
+            if (ENVIRON != 'dev') {
+                throw new Exception('很抱歉，已超出今日最大发送次数限制');
+            }
+        }
+        // 发送次数递减
+        Cache::update($cacheKey, ['times' => $record['times'] - 1]);
+        return [
+            'status' => 1,
+            'data' => [],
+            'msg' => 'success'
+        ];
+    }
 
     public static function check($code, $key)
     {
