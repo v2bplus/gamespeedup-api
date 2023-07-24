@@ -30,10 +30,12 @@ class Cache
 
     public static function set($name, $data, $maxLifetime = 0)
     {
+        $item = self::getInstance()->getItem($name);
+        $item->set($data);
         if (!$maxLifetime) {
-            return self::getInstance()->getItem($name)->set($data);
+            $item = $item->expiresAfter($ttl);
         }
-        return self::getInstance()->getItem($name)->set($data)->expiresAfter($maxLifetime);
+        return self::getInstance()->save($item);
     }
 
     public static function update($name, $newVal, $maxLifetime = 0, $isMerge = true)
