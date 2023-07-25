@@ -171,6 +171,16 @@ class User extends \Service
                     'data' => [],
                 ];
             }
+            $groupList = Group::getNameList();
+            if ($list['items']) {
+                foreach ($list['items'] as $index => $v) {
+                    $list['items'][$index]['group_name'] = null;
+                    if (isset($groupList[$v['group_id']])) {
+                        $list['items'][$index]['group_name'] = $groupList[$v['group_id']]['name'];
+                    }
+                    unset($list['items'][$index]['php_password']);
+                }
+            }
             return [
                 'status' => 1,
                 'data' => $list,

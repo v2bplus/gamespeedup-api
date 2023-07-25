@@ -138,16 +138,16 @@ class LoginController extends \CoreController\GameAbstract
     //密码登录
     public function passAction()
     {
-        $mobile = $this->getPost('mobile', null, true);
+        $user = $this->getPost('user', null, true);
         $password = $this->getPost('password', null);
 
         $post = [
-            'mobile' => $mobile,
+            'user' => $user,
             'password' => $password,
         ];
         $rules = [
-            'mobile' => [
-                ['required', 'message' => '手机号不能为空'],
+            'user' => [
+                ['required', 'message' => '用户名不能为空'],
             ],
             'password' => [
                 ['required', 'message' => '密码不能为空'],
@@ -158,63 +158,10 @@ class LoginController extends \CoreController\GameAbstract
         if (!$rs->validate()) {
             Response::renderJson(GAME_USER_STATUS_ERROR, '验证错误', $rs->errors());
         }
-        $rs = Login::passLogin($mobile,$password, $this->platform,$this->ip);
+        $rs = Login::passLogin($user,$password, $this->platform,$this->ip);
         if (1 !== $rs['status']) {
             Response::renderJson(GAME_USER_STATUS_ERROR, $rs['msg']);
         }
         Response::renderJson(GAME_USER_STATUS_SUCCESS, '登陆成功', $rs['data']);
     }
-
-    // // 重设密码提交 (发邮件)
-    // public function resetAction()
-    // {
-    //     $email = $this->getPost('email', null, true);
-    //     $post = [
-    //         'email' => $email,
-    //     ];
-    //     $rules = [
-    //         'email' => [
-    //             ['required', 'message' => 'email不能为空'],
-    //             ['email', 'message' => '不是正确的邮箱地址'],
-    //         ],
-    //     ];
-    //     $rs = Validator::customerValidate($post, $rules);
-    //     if (!$rs->validate()) {
-    //         Response::renderJson(GAME_USER_STATUS_ERROR, '验证错误', $rs->errors());
-    //     }
-    //     $rs = Login::sendResetEmail($email);
-    //     if (1 !== $rs['status']) {
-    //         Response::renderJson(GAME_USER_STATUS_ERROR, $rs['msg']);
-    //     }
-    //     Response::renderJson(GAME_USER_STATUS_SUCCESS, $rs['msg'], $rs['data']);
-    // }
-
-    // // 重置密码确认
-    // public function reset_confirmAction()
-    // {
-    //     $token = $this->getPost('token', null, true);
-    //     $newPass = $this->getPost('new_password', null, true);
-    //     $post = [
-    //         'token' => $token,
-    //         'new_password' => $newPass,
-    //     ];
-    //     $rules = [
-    //         'token' => [
-    //             ['required', 'message' => 'Token不能为空'],
-    //         ],
-    //         'new_password' => [
-    //             ['required', 'message' => '密码不能为空'],
-    //         ],
-    //     ];
-    //     $rs = Validator::customerValidate($post, $rules);
-    //     if (!$rs->validate()) {
-    //         Response::renderJson(GAME_USER_STATUS_ERROR, '验证错误', $rs->errors());
-    //     }
-    //     $result = Login::resetPassword($token, $newPass);
-    //     if (1 !== $result['status']) {
-    //         Response::renderJson(GAME_USER_STATUS_ERROR, $result['msg']);
-    //     }
-
-    //     Response::renderJson(GAME_USER_STATUS_SUCCESS, $result['msg'], $result['data']);
-    // }
 }
