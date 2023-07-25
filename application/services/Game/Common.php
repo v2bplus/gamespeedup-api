@@ -2,6 +2,7 @@
 namespace Services\Game;
 
 use Exception;
+use Http;
 use Services\Api\CaptchaApi;
 
 class Common extends \Service
@@ -10,7 +11,23 @@ class Common extends \Service
         'captcha',
         'payment',
     ];
+
+    const PLATFROMS = [
+        'H5',
+        'APP',
+        'PC'
+    ];
+
     const TOKEN_CODE_CACHE_TIME = 600;
+
+    public static function getPlatform()
+    {
+        $plat = strtoupper(Http::getHttpHeader('platform'));
+        if (!in_array($plat, self::PLATFROMS)) {
+            return 'None';
+        }
+        return $plat;
+    }
 
     public static function captcha()
     {
@@ -62,12 +79,12 @@ class Common extends \Service
     public static function sendCaptcha($mobile, $code = null, $key = null)
     {
         try {
-            if ($code && $key) {
-                $rs = CaptchaApi::check($code, $key);
-                if ($rs['status'] != 1) {
-                    throw new \Exception($rs['msg']);
-                }
-            }
+            // if ($code && $key) {
+            //     $rs = CaptchaApi::check($code, $key);
+            //     if ($rs['status'] != 1) {
+            //         throw new \Exception($rs['msg']);
+            //     }
+            // }
             $rs = CaptchaApi::record($mobile);
             if ($rs['status'] != 1) {
                 throw new \Exception($rs['msg']);
@@ -115,7 +132,6 @@ class Common extends \Service
     private static function sendSms($sceneValue, $acceptPhone, $templateParams)
     {
         try {
-
             return [
                 'status' => 1,
                 'data' =>[],

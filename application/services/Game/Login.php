@@ -3,6 +3,7 @@
 namespace Services\Game;
 
 use Services\Login\Token;
+use Utility;
 
 class Login extends \Service
 {
@@ -67,37 +68,87 @@ class Login extends \Service
         }
     }
 
-    public static function userLogin($emailOrMobile, $pwd)
+    public static function register($data, $platform)
     {
         try {
             $userModel = new \GameUserModel();
             $where = [
-                'OR' => [
-                    'mobile' => $emailOrMobile,
-                    'email' => $emailOrMobile,
-                ],
+                'mobile' => $data['mobile']
             ];
-            $userInfo = $userModel->getInfoByWhere($where);
-            if (!$userInfo) {
-                throw new \Exception('用户不存在');
+            $userInfo = $userModel->getInfoByWhere($where, '*');
+            if ($userInfo) {
+                // $rs = self::updateUser($userInfo['id'], $data);
+                return [
+                    'status' => 1,
+                    'data' => $userInfo,
+                    'msg' => '',
+                ];
             }
-            $role = self::ROLE_USER;
-            if (!password_verify($pwd, $userInfo['php_password'])) {
-                throw new \Exception('密码不正确');
+            $rs = self::createUser($data['mobile'], $platform, $data);
+            if ($rs['status'] != 1) {
+                throw new \Exception($rs['msg']);
             }
-            $userId = $id = $userInfo['id'];
-            $nickName = $userInfo['mobile'] ?? '';
-            if (!$nickName) {
-                $a1 = explode('@', $userInfo['email']);
-                $nickName = $a1[0] ?? '';
+            return [
+                'status' => 1,
+                'data' => $rs['data'],
+                'msg' => '',
+            ];
+        } catch (\Exception $e) {
+            return [
+                'status' => 0,
+                'msg' => $e->getMessage(),
+            ];
+        }
+    }
+
+    private static function createUser($mobile, $platform, $data)
+    {
+        $userInfo = [];
+        $userModel = new \GameUserModel();
+        $nickName = '';
+        if (!empty($mobile)) {
+            $nickName = Utility::hideMobile($mobile);
+        }
+        $insert = [
+            'mobile' => $mobile,
+            'nickname' => $nickName,
+            'create_time' => time(),
+            'last_login_time' => time(),
+        ];
+        $uid = $userModel->addData($insert);
+        if ($userModel->getErrors()) {
+            throw new \Exception('添加用户失败');
+        }
+        $userInfo['id'] = $uid;
+        return [
+            'status' => 1,
+            'data' => $userInfo,
+            'msg' => '',
+        ];
+    }
+
+    //手机验证码登录
+    public static function mobileLogin($post,$platform, $ip)
+    {
+        try {
+            $rs = Common::checkSms($post['mobile'], $post['smsCode']);
+            if ($rs['status'] != 1) {
+                throw new \Exception($rs['msg']);
             }
+            $data = [
+                'mobile' => $post['mobile'],
+            ];
+            $data['invite'] = $post['invite'] ?? 0;
+            $rs = User::regUser($data, $platform, $ip);
+            if ($rs['status'] != 1) {
+                throw new \Exception($rs['msg']);
+            }
+            $userInfo = $rs['data'];
             $info = [
-                'id' => $id,
-                'user_id' => $userId,
-                'nickname' => $nickName,
-                'email' => $userInfo['email'],
+                'id' => $userInfo['id'],
+                'user_id' => $userInfo['id'],
+                'nickname' => $userInfo['nickname'],
                 'mobile' => $userInfo['mobile'],
-                'role' => $role,
             ];
             $token = Token::login($info, self::USER_LOGIN_TOKEN_TIME);
             if (!$token) {
@@ -107,9 +158,8 @@ class Login extends \Service
                 'token' => $token,
                 'email' => $userInfo['email'],
                 'mobile' => $userInfo['mobile'],
-                'nickname' => $nickName,
-                'role' => $role,
-                'id' => $id,
+                'nickname' => $userInfo['nickname'],
+                'id' => $userInfo['id'],
             ];
 
             return [

@@ -1,6 +1,5 @@
 <?php
 
-// admin模块
 use Http;
 use Services\Game\Login;
 use Services\Game\User;
@@ -104,30 +103,31 @@ class LoginController extends \CoreController\GameAbstract
         Response::renderJson(GAME_USER_STATUS_SUCCESS, '处理成功', $detail['data']);
     }
 
-    // 用户登陆
+    // 用户验证码登陆
     public function loginAction()
     {
-        $username = $this->getPost('user', null, true);
-        $username = strtolower($username);
-        $password = $this->getPost('password', null);
+        $mobile = $this->getPost('mobile', null, true);
+        $smsCode = $this->getPost('smsCode', null);
+        $inviteCode = $this->getPost('invite', null);
+
         $post = [
-            'user' => $username,
-            'password' => $password,
+            'mobile' => $mobile,
+            'smsCode' => $smsCode,
+            'invite' => $inviteCode,
         ];
         $rules = [
-            'user' => [
-                ['required', 'message' => '用户名不能为空'],
+            'mobile' => [
+                ['required', 'message' => '手机号不能为空'],
             ],
-            'password' => [
-                ['required', 'message' => '密码不能为空'],
-                ['lengthMin', 6, 'message' => '密码格式不正确'],
+            'smsCode' => [
+                ['required', 'message' => '验证码code不能为空'],
             ],
         ];
         $rs = Validator::customerValidate($post, $rules);
         if (!$rs->validate()) {
             Response::renderJson(GAME_USER_STATUS_ERROR, '验证错误', $rs->errors());
         }
-        $rs = Login::userLogin($username, $password);
+        $rs = Login::mobileLogin($post, $this->platform,$this->ip);
         if (1 !== $rs['status']) {
             Response::renderJson(GAME_USER_STATUS_ERROR, $rs['msg']);
         }
