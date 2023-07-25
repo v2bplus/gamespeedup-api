@@ -9,7 +9,7 @@ use Service;
 class CaptchaApi extends Service
 {
     //验证码过期时间（s）
-    protected static $expire = 300;
+    protected static $expire = 600;
     //验证码可重复验证的次数
 
     //发送限制间隔时间，默认24小时
@@ -210,7 +210,7 @@ class CaptchaApi extends Service
             $cacheKey = self::getCacheKey($key);
             $check = Cache::check($cacheKey);
             if (!$check) {
-                throw new Exception('验证码不存在，请重新获取');
+                throw new Exception('验证码已过期，请重新获取');
             }
             $data = Cache::get($cacheKey);
             if ($data && $data['times'] <= 0) {

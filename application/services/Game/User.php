@@ -3,6 +3,7 @@
 namespace Services\Game;
 
 use Services\Login\Token;
+use Utility;
 
 class User extends \Service
 {
@@ -28,7 +29,9 @@ class User extends \Service
             if ($uuidRs) {
                 $uuid = $uuidRs['data'];
             }
-            $userInfo['mobile'] = $mobile ?? '';
+            $nickName = \Utility::hideMobile($mobile);
+            $userInfo['mobile'] = $mobile;
+            $userInfo['nickname'] = $nickName;
             $userInfo['email'] = $data['email']??'';
             $userInfo['invite_user_id'] = $inviteUserId;
             $userInfo['php_password'] = $phpPass;
@@ -41,6 +44,7 @@ class User extends \Service
                 'id' => $userId,
                 'email' => $userInfo['email'],
                 'mobile' => $userInfo['mobile'],
+                'nickname' => $userInfo['nickname'],
                 'role' => '',
             ];
             return [
