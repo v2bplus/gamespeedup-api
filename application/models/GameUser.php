@@ -34,6 +34,7 @@ class GameUserModel extends GameBaseModel
             $addArray['invite_user_id'] = $userInfo['invite_user_id'];
         }
         $addArray['mobile'] = $userInfo['mobile'] ?? null;
+        $addArray['nickname'] = $userInfo['nickname'] ?? null;
         $addArray['email'] = $userInfo['email'] ?? null;
         $addArray['php_password'] = $userInfo['php_password'];
 
@@ -43,6 +44,10 @@ class GameUserModel extends GameBaseModel
 
         if (isset($userInfo['expire_time'])) {
             $addArray['expire_time'] = $userInfo['expire_time'];
+        }
+
+        if (isset($userInfo['last_login_time'])) {
+            $addArray['last_login_time'] = $userInfo['last_login_time'];
         }
         $addArray['create_time'] = time();
         $addArray['update_time'] = time();

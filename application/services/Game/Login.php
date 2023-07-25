@@ -3,7 +3,6 @@
 namespace Services\Game;
 
 use Services\Login\Token;
-use Utility;
 
 class Login extends \Service
 {
@@ -34,7 +33,7 @@ class Login extends \Service
                 throw new \Exception('密码不正确');
             }
             $userId = $id = $adminInfo['id'];
-            //Cache
+            // Cache
             $info = [
                 'id' => $id,
                 'uid' => $userId,
@@ -42,7 +41,7 @@ class Login extends \Service
                 'email' => $adminInfo['email'],
                 'role' => $role,
             ];
-            $token = Token::login($info, self::USER_LOGIN_TOKEN_TIME,time());
+            $token = Token::login($info, self::USER_LOGIN_TOKEN_TIME, time());
             if (!$token) {
                 throw new \Exception('登陆失败');
             }
@@ -68,18 +67,18 @@ class Login extends \Service
         }
     }
 
-    //手机验证码登录
-    public static function mobileLogin($post,$platform, $ip)
+    // 手机验证码登录
+    public static function smsLogin($post, $platform, $ip)
     {
         try {
             if (ENVIRON == 'dev' || ENVIRON == 'test') {
-                //测试环境
-                if ($post['smsCode'] != '888888') {
-                    throw new \Exception("验证码不正确");
+                // 测试环境
+                if ('888888' != $post['smsCode']) {
+                    throw new \Exception('验证码不正确');
                 }
-            }else{
+            } else {
                 $rs = Common::checkSms($post['mobile'], $post['smsCode']);
-                if ($rs['status'] != 1) {
+                if (1 != $rs['status']) {
                     throw new \Exception($rs['msg']);
                 }
             }
@@ -88,7 +87,51 @@ class Login extends \Service
             ];
             $data['invite'] = $post['invite'] ?? 0;
             $rs = User::login($data, $platform, $ip);
-            if ($rs['status'] != 1) {
+            if (1 != $rs['status']) {
+                throw new \Exception($rs['msg']);
+            }
+            $userInfo = $rs['data'];
+            $info = [
+                'id' => $userInfo['id'],
+                'user_id' => $userInfo['id'],
+                'nickname' => $userInfo['nickname'],
+                'mobile' => $userInfo['mobile'],
+            ];
+            $token = Token::login($info, self::USER_LOGIN_TOKEN_TIME);
+            if (!$token) {
+                throw new \Exception('登陆失败');
+            }
+            $returnData = [
+                'token' => $token,
+                'email' => $userInfo['email'],
+                'mobile' => $userInfo['mobile'],
+                'nickname' => $userInfo['nickname'],
+                'id' => $userInfo['id'],
+            ];
+
+            return [
+                'status' => 1,
+                'data' => $returnData,
+                'msg' => '',
+            ];
+        } catch (\Exception $e) {
+            return [
+                'status' => 0,
+                'msg' => $e->getMessage(),
+            ];
+        }
+    }
+
+    // 密码登录
+    public static function passLogin($user, $pwd, $platform, $ip)
+    {
+        try {
+            $data = [
+                'user' => $user,
+                'pwd' => $pwd,
+            ];
+            $rs = User::checkUser($data, $platform, $ip);
+            if (1 != $rs['status']) {
                 throw new \Exception($rs['msg']);
             }
             $userInfo = $rs['data'];

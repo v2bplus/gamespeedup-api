@@ -67,7 +67,45 @@ class User extends \Service
         }
     }
 
-    public static function createUser($mobile, $data)
+    public static function checkUser($user, $password)
+    {
+        try {
+            $userModel = new \GameUserModel();
+            $where = [
+                'OR' => [
+                    'mobile' => $user,
+                    'email' => $user,
+                ],
+            ];
+            $userInfo = $userModel->getInfoByWhere($where);
+            if (!$userInfo) {
+                throw new \Exception('用户不存在');
+            }
+            if (!password_verify($password, $userInfo['php_password'])) {
+                throw new \Exception('密码不正确');
+            }
+            // $rs = self::updateUser($userInfo['id'],  $data);
+            $return = [
+                'id' => $userInfo['id'],
+                'user_id' => $userInfo['id'],
+                'nickname' => $userInfo['nickname'],
+                'mobile' => $userInfo['mobile'],
+            ];
+            return [
+                'status' => 1,
+                'data' => $return,
+                'msg' => '',
+            ];
+
+        } catch (\Exception $e) {
+            return [
+                'status' => 0,
+                'msg' => $e->getMessage(),
+            ];
+        }
+    }
+
+    private static function createUser($mobile, $data)
     {
         $userModel = new \GameUserModel();
         $userInfo = [];
@@ -85,6 +123,7 @@ class User extends \Service
         $userInfo['invite_user_id'] = $data['invite']??0;
         $userInfo['php_password'] = $phpPass;
         $userInfo['uuid'] = $uuid;
+        $userInfo['last_login_time'] = time();
         $userId = $userModel->addData($userInfo);
         if ($userModel->getErrors()) {
             throw new \Exception('添加用户信息失败:'.json_encode($userModel->getErrors()));
@@ -98,6 +137,22 @@ class User extends \Service
         return [
             'status' => 1,
             'data' => $returnData,
+            'msg' => '',
+        ];
+    }
+
+    private static function updateUser($id, $data)
+    {
+        $userModel = new \GameUserModel();
+        $userModel->updateData($id, $data);
+        if ($userModel->getErrors()) {
+            throw new \Exception('编辑用户失败');
+        }
+        $return = [];
+        $return['id'] = $id;
+        return [
+            'status' => 1,
+            'data' => $return,
             'msg' => '',
         ];
     }

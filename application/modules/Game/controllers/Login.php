@@ -75,34 +75,34 @@ class LoginController extends \CoreController\GameAbstract
         Response::renderJson(GAME_USER_STATUS_SUCCESS, 'success', $rs['data']);
     }
 
-    public function registerAction()
-    {
-        $email = $this->getPost('email', null);
-        $password = $this->getPost('password', null);
-        $inviteCode = $this->getPost('invite', null);
-        $post = [
-            'email' => $email,
-            'password' => $password,
-            'invite' => $inviteCode,
-        ];
-        $rules = [
-            'email' => [
-                ['required', 'message' => '邮件地址不能为空'],
-            ],
-            'password' => [
-                ['required', 'message' => 'password不能为空'],
-            ],
-        ];
-        $rs = Validator::customerValidate($post, $rules);
-        if (!$rs->validate()) {
-            Response::renderJson(GAME_USER_STATUS_ERROR, '验证错误', $rs->errors());
-        }
-        $detail = User::regUser($post, Http::clientIp());
-        if (1 !== $detail['status']) {
-            Response::renderJson(GAME_USER_STATUS_ERROR, $detail['msg']);
-        }
-        Response::renderJson(GAME_USER_STATUS_SUCCESS, '处理成功', $detail['data']);
-    }
+    // public function registerAction()
+    // {
+    //     $email = $this->getPost('email', null);
+    //     $password = $this->getPost('password', null);
+    //     $inviteCode = $this->getPost('invite', null);
+    //     $post = [
+    //         'email' => $email,
+    //         'password' => $password,
+    //         'invite' => $inviteCode,
+    //     ];
+    //     $rules = [
+    //         'email' => [
+    //             ['required', 'message' => '邮件地址不能为空'],
+    //         ],
+    //         'password' => [
+    //             ['required', 'message' => 'password不能为空'],
+    //         ],
+    //     ];
+    //     $rs = Validator::customerValidate($post, $rules);
+    //     if (!$rs->validate()) {
+    //         Response::renderJson(GAME_USER_STATUS_ERROR, '验证错误', $rs->errors());
+    //     }
+    //     $detail = User::regUser($post, Http::clientIp());
+    //     if (1 !== $detail['status']) {
+    //         Response::renderJson(GAME_USER_STATUS_ERROR, $detail['msg']);
+    //     }
+    //     Response::renderJson(GAME_USER_STATUS_SUCCESS, '处理成功', $detail['data']);
+    // }
 
     // 用户验证码登陆
     public function loginAction()
@@ -128,7 +128,37 @@ class LoginController extends \CoreController\GameAbstract
         if (!$rs->validate()) {
             Response::renderJson(GAME_USER_STATUS_ERROR, '验证错误', $rs->errors());
         }
-        $rs = Login::mobileLogin($post, $this->platform,$this->ip);
+        $rs = Login::smsLogin($post, $this->platform,$this->ip);
+        if (1 !== $rs['status']) {
+            Response::renderJson(GAME_USER_STATUS_ERROR, $rs['msg']);
+        }
+        Response::renderJson(GAME_USER_STATUS_SUCCESS, '登陆成功', $rs['data']);
+    }
+
+    //密码登录
+    public function passAction()
+    {
+        $mobile = $this->getPost('mobile', null, true);
+        $password = $this->getPost('password', null);
+
+        $post = [
+            'mobile' => $mobile,
+            'password' => $password,
+        ];
+        $rules = [
+            'mobile' => [
+                ['required', 'message' => '手机号不能为空'],
+            ],
+            'password' => [
+                ['required', 'message' => '密码不能为空'],
+                ['lengthMin', 6, 'message' => '密码格式不正确'],
+            ],
+        ];
+        $rs = Validator::customerValidate($post, $rules);
+        if (!$rs->validate()) {
+            Response::renderJson(GAME_USER_STATUS_ERROR, '验证错误', $rs->errors());
+        }
+        $rs = Login::passLogin($mobile,$password, $this->platform,$this->ip);
         if (1 !== $rs['status']) {
             Response::renderJson(GAME_USER_STATUS_ERROR, $rs['msg']);
         }

@@ -1,5 +1,5 @@
 -- https://www.uuidgenerator.net/version4
-USE `trojan`;
+USE `game`;
 CREATE TABLE IF NOT EXISTS `uuids` (
   `id` int(11) unsigned NOT NULL AUTO_INCREMENT COMMENT '主键ID',
   `uuid` varchar(64) NOT NULL DEFAULT '' COMMENT '用户UUID',
