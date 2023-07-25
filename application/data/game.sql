@@ -85,6 +85,7 @@ CREATE TABLE IF NOT EXISTS `gs_user_real` (
   `create_time` int(11) unsigned NOT NULL DEFAULT '0' COMMENT '创建时间',
   `update_time` int(11) unsigned NOT NULL DEFAULT '0' COMMENT '更新时间',
   `audit_time` int(11) unsigned NOT NULL DEFAULT '0' COMMENT '审核时间',
+  `remark` varchar(255) NOT NULL DEFAULT '' COMMENT '备注',
   PRIMARY KEY (`id`),
   UNIQUE KEY `user_id` (`user_id`) USING BTREE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='实名认证审核表';

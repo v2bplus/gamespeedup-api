@@ -8,6 +8,36 @@ class GameUserRealModel extends GameBaseModel
     protected $_order = [];
     protected $_default_order = ['id' => 'DESC'];
 
+    public function updateData($post = [], $id)
+    {
+        $array = [
+            'update_time' => time(),
+        ];
+        if (isset($post['audit_time'])) {
+            $array['audit_time'] = $post['audit_time'];
+        }
+
+        if (isset($post['real_name'])) {
+            $array['real_name'] = $post['real_name'];
+        }
+
+        if (isset($post['content'])) {
+            $array['content'] = $post['content'];
+        }
+
+        if (isset($post['remark'])) {
+            $array['remark'] = $post['remark'];
+        }
+
+        if (!$array) {
+            return false;
+        }
+
+        return $this->update($array, [
+            'id' => $id,
+        ]);
+    }
+
     public function getList($page, $pageSize, $column = null, $condition = [], $order = [])
     {
         $where = [

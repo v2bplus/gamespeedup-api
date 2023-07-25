@@ -6,6 +6,7 @@ use Services\Game\AdminUser;
 use Services\Game\Group;
 use Services\Game\Plan;
 use Services\Game\User;
+use Services\Game\UserReal;
 
 class AdminController extends \CoreController\GameAdminAbstract
 {
@@ -294,40 +295,6 @@ class AdminController extends \CoreController\GameAdminAbstract
         Response::renderJson(GAME_ADMIN_STATUS_SUCCESS, '处理成功', $detail['data']);
     }
 
-    public function user_addAction()
-    {
-        $expire = $this->getPost('expire_date', null);
-        $email = $this->getPost('email', null);
-        $mobile = $this->getPost('mobile', null);
-        $post = [
-            'email' => $email,
-            'expire' => $expire,
-            'mobile' => $mobile,
-        ];
-        $rules = [
-            'mobile' => [
-                ['optional'],
-                ['Length', 11, 'message' => '手机号格式不正确'],
-            ],
-            'password' => [
-                ['required', 'message' => 'password不能为空'],
-            ],
-            'expire' => [
-                ['optional'],
-                ['date', 'message' => '日期格式不正确'],
-            ],
-        ];
-        $rs = Validator::customerValidate($post, $rules);
-        if (!$rs->validate()) {
-            Response::renderJson(GAME_ADMIN_STATUS_ERROR, '验证错误', $rs->errors());
-        }
-        $detail = AdminUser::addUser($post, $this->adminId);
-        if (1 !== $detail['status']) {
-            Response::renderJson(GAME_ADMIN_STATUS_ERROR, $detail['msg']);
-        }
-        Response::renderJson(GAME_ADMIN_STATUS_SUCCESS, '处理成功', $detail['data']);
-    }
-
     public function user_updateAction()
     {
         $id = $this->getPost('id', 0);
@@ -365,6 +332,48 @@ class AdminController extends \CoreController\GameAdminAbstract
             Response::renderJson(GAME_ADMIN_STATUS_ERROR, '验证错误', $rs->errors());
         }
         $detail = User::editInfo($post, $this->adminId);
+        if (1 !== $detail['status']) {
+            Response::renderJson(GAME_ADMIN_STATUS_ERROR, $detail['msg']);
+        }
+        Response::renderJson(GAME_ADMIN_STATUS_SUCCESS, '处理成功', $detail['data']);
+    }
+
+    public function real_listAction()
+    {
+        $detail = UserReal::getAll($this->page, $this->pageSize, $this->sortInfo);
+        if (1 !== $detail['status']) {
+            Response::renderJson(GAME_ADMIN_STATUS_ERROR, $detail['msg']);
+        }
+        Response::renderJson(GAME_ADMIN_STATUS_SUCCESS, '处理成功', $detail['data']);
+    }
+
+    public function real_updateAction()
+    {
+        $id = $this->getPost('id', 0);
+        $status = $this->getPost('status', 0);
+        $remark = $this->getPost('remark', null);
+        $post = [
+            'id' => $id,
+            'status' => $status,
+            'remark' => $remark,
+        ];
+        $rules = [
+            'id' => [
+                ['required', 'message' => 'ID不能为空'],
+            ],
+            'status' => [
+                ['in', UserReal::$status, 'message' => '状态不正确'],
+            ],
+            'remark' => [
+                ['optional'],
+                ['lengthMax', 255, 'message' => '格式不正确'],
+            ],
+        ];
+        $rs = Validator::customerValidate($post, $rules);
+        if (!$rs->validate()) {
+            Response::renderJson(GAME_ADMIN_STATUS_ERROR, '验证错误', $rs->errors());
+        }
+        $detail = UserReal::updateStatus($post, $this->adminId);
         if (1 !== $detail['status']) {
             Response::renderJson(GAME_ADMIN_STATUS_ERROR, $detail['msg']);
         }
