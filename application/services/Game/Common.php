@@ -75,15 +75,15 @@ class Common extends \Service
         }
     }
 
-    public static function sendCaptcha($mobile, $code = null, $key = null)
+    public static function sendCaptcha($mobile, $key = null,$code = null)
     {
         try {
-            // if ($code && $key) {
-            //     $rs = CaptchaApi::check($code, $key);
-            //     if ($rs['status'] != 1) {
-            //         throw new \Exception($rs['msg']);
-            //     }
-            // }
+            if ($key && $code) {
+                $rs = CaptchaApi::check($code, $key);
+                if ($rs['status'] != 1) {
+                    throw new \Exception($rs['msg']);
+                }
+            }
             $rs = CaptchaApi::record($mobile);
             if ($rs['status'] != 1) {
                 throw new \Exception($rs['msg']);
