@@ -15,12 +15,12 @@
         "casbin/casbin": "^3.21",
         "robmorgan/phinx": "^0.13",
         "twig/twig": "^3.6",
-        "gregwar/captcha": "1.*",
         "league/flysystem": "^3.15",
         "zoujingli/wechat-developer": "^1.2",
         "mjphaynes/php-resque": "4.x-dev",
         "spomky-labs/otphp": "10.0.*",
-        "overtrue/wechat": "~5.0"
+        "overtrue/wechat": "~5.0",
+        "gregwar/captcha": "dev-master"
     },
     "require-dev": {
         "phpmd/phpmd": "@stable",
