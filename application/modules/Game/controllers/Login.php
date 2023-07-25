@@ -24,7 +24,8 @@ class LoginController extends \CoreController\GameAbstract
         Response::appJson(GAME_USER_STATUS_SUCCESS, ' Ping', []);
     }
 
-    public function imageAction()
+    //发送短信的图形验证码
+    public function captchaAction()
     {
         $rs = Common::captcha();
         if ($rs['status'] !== 1) {

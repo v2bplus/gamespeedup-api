@@ -29,10 +29,9 @@ class Common extends \Service
         return $plat;
     }
 
-    public static function captcha()
+    public static function captcha($codeLength = 4)
     {
         try {
-            $codeLength = 4;
             $captcha = CaptchaApi::create($codeLength);
             if ($captcha['status'] != 1) {
                 throw new \Exception($captcha['msg']);
