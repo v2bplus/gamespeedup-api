@@ -68,78 +68,26 @@ class Login extends \Service
         }
     }
 
-    public static function register($data, $platform)
-    {
-        try {
-            $userModel = new \GameUserModel();
-            $where = [
-                'mobile' => $data['mobile']
-            ];
-            $userInfo = $userModel->getInfoByWhere($where, '*');
-            if ($userInfo) {
-                // $rs = self::updateUser($userInfo['id'], $data);
-                return [
-                    'status' => 1,
-                    'data' => $userInfo,
-                    'msg' => '',
-                ];
-            }
-            $rs = self::createUser($data['mobile'], $platform, $data);
-            if ($rs['status'] != 1) {
-                throw new \Exception($rs['msg']);
-            }
-            return [
-                'status' => 1,
-                'data' => $rs['data'],
-                'msg' => '',
-            ];
-        } catch (\Exception $e) {
-            return [
-                'status' => 0,
-                'msg' => $e->getMessage(),
-            ];
-        }
-    }
-
-    private static function createUser($mobile, $platform, $data)
-    {
-        $userInfo = [];
-        $userModel = new \GameUserModel();
-        $nickName = '';
-        if (!empty($mobile)) {
-            $nickName = Utility::hideMobile($mobile);
-        }
-        $insert = [
-            'mobile' => $mobile,
-            'nickname' => $nickName,
-            'create_time' => time(),
-            'last_login_time' => time(),
-        ];
-        $uid = $userModel->addData($insert);
-        if ($userModel->getErrors()) {
-            throw new \Exception('添加用户失败');
-        }
-        $userInfo['id'] = $uid;
-        return [
-            'status' => 1,
-            'data' => $userInfo,
-            'msg' => '',
-        ];
-    }
-
     //手机验证码登录
     public static function mobileLogin($post,$platform, $ip)
     {
         try {
-            $rs = Common::checkSms($post['mobile'], $post['smsCode']);
-            if ($rs['status'] != 1) {
-                throw new \Exception($rs['msg']);
+            if (ENVIRON == 'dev' || ENVIRON == 'test') {
+                //测试环境
+                if ($post['smsCode'] != '888888') {
+                    throw new \Exception("验证码不正确");
+                }
+            }else{
+                $rs = Common::checkSms($post['mobile'], $post['smsCode']);
+                if ($rs['status'] != 1) {
+                    throw new \Exception($rs['msg']);
+                }
             }
             $data = [
                 'mobile' => $post['mobile'],
             ];
             $data['invite'] = $post['invite'] ?? 0;
-            $rs = User::regUser($data, $platform, $ip);
+            $rs = User::login($data, $platform, $ip);
             if ($rs['status'] != 1) {
                 throw new \Exception($rs['msg']);
             }

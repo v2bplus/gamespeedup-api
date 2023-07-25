@@ -7,49 +7,56 @@ use Utility;
 
 class User extends \Service
 {
-    public static function regUser($data,$platform, $ip = '127.0.0.1')
+    // public static function regUser($data,$platform, $ip = '127.0.0.1')
+    // {
+    //     try {
+    //         $userModel = new \GameUserModel();
+    //         $mobile = strtolower($data['mobile']);
+    //         $check = $userModel->checkMobile($mobile);
+    //         if ($check) {
+    //             throw new \Exception('手机号码: '.$mobile.' 已被使用');
+    //         }
+    //         $inviteUserId = 0;
+    //         $invite = $data['invite'] ?? null;
+    //         if ($invite) {
+    //             $inviteUserId = $invite;
+    //         }
+
+    //         return [
+    //             'status' => 1,
+    //             'data' => $returnData,
+    //             'msg' => '',
+    //         ];
+    //     } catch (\Exception $e) {
+    //         return [
+    //             'status' => 0,
+    //             'msg' => $e->getMessage(),
+    //         ];
+    //     }
+    // }
+
+    public static function login($data,$platform, $ip = '127.0.0.1')
     {
-        try {
+         try {
             $userModel = new \GameUserModel();
-            $mobile = strtolower($data['mobile']);
-            $check = $userModel->checkMobile($mobile);
-            if ($check) {
-                throw new \Exception('手机号码: '.$mobile.' 已被使用');
-            }
-            $inviteUserId = 0;
-            $invite = $data['invite'] ?? null;
-            if ($invite) {
-                $inviteUserId = $invite;
-            }
-            $uuid = \Utility::getGuid();
-            $password = $data['password'] ?? $uuid;
-            $phpPass = password_hash($password, PASSWORD_DEFAULT);
-            $userInfo = [];
-            $uuidRs = self::getOneUUID();
-            if ($uuidRs) {
-                $uuid = $uuidRs['data'];
-            }
-            $nickName = \Utility::hideMobile($mobile);
-            $userInfo['mobile'] = $mobile;
-            $userInfo['nickname'] = $nickName;
-            $userInfo['email'] = $data['email']??'';
-            $userInfo['invite_user_id'] = $inviteUserId;
-            $userInfo['php_password'] = $phpPass;
-            $userInfo['uuid'] = $uuid;
-            $userId = $userModel->addData($userInfo);
-            if ($userModel->getErrors()) {
-                throw new \Exception('添加用户信息失败:'.json_encode($userModel->getErrors()));
-            }
-            $returnData = [
-                'id' => $userId,
-                'email' => $userInfo['email'],
-                'mobile' => $userInfo['mobile'],
-                'nickname' => $userInfo['nickname'],
-                'role' => '',
+            $where = [
+                'mobile' => $data['mobile']
             ];
+            $userInfo = $userModel->getInfoByWhere($where, '*');
+            if ($userInfo) {
+                return [
+                    'status' => 1,
+                    'data' => $userInfo,
+                    'msg' => '',
+                ];
+            }
+            $rs = self::createUser($data['mobile'],$data);
+            if ($rs['status'] != 1) {
+                throw new \Exception($rs['msg']);
+            }
             return [
                 'status' => 1,
-                'data' => $returnData,
+                'data' => $rs['data'],
                 'msg' => '',
             ];
         } catch (\Exception $e) {
@@ -58,6 +65,41 @@ class User extends \Service
                 'msg' => $e->getMessage(),
             ];
         }
+    }
+
+    public static function createUser($mobile, $data)
+    {
+        $userModel = new \GameUserModel();
+        $userInfo = [];
+        $uuid = \Utility::getGuid();
+        $password = $data['password'] ?? $uuid;
+        $phpPass = password_hash($password, PASSWORD_DEFAULT);
+        $uuidRs = self::getOneUUID();
+        if ($uuidRs) {
+            $uuid = $uuidRs['data'];
+        }
+        $nickName = \Utility::hideMobile($mobile);
+        $userInfo['mobile'] = $mobile;
+        $userInfo['nickname'] = $nickName;
+        $userInfo['email'] = $data['email']??'';
+        $userInfo['invite_user_id'] = $data['invite']??0;
+        $userInfo['php_password'] = $phpPass;
+        $userInfo['uuid'] = $uuid;
+        $userId = $userModel->addData($userInfo);
+        if ($userModel->getErrors()) {
+            throw new \Exception('添加用户信息失败:'.json_encode($userModel->getErrors()));
+        }
+        $returnData = [
+            'id' => $userId,
+            'mobile' => $userInfo['mobile'],
+            'nickname' => $userInfo['nickname'],
+            'uuid' => $userInfo['uuid'],
+        ];
+        return [
+            'status' => 1,
+            'data' => $returnData,
+            'msg' => '',
+        ];
     }
 
     public static function getAll($page, $pageSize, $order)
