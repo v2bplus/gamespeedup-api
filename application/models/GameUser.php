@@ -8,16 +8,16 @@ class GameUserModel extends GameBaseModel
     protected $_order = [];
     protected $_default_order = ['id' => 'DESC'];
 
-    public function checkMobile($email, $id = null)
+    public function checkMobile($mobile, $id = null)
     {
         if ($id) {
             $where = [
-                'mobile' => $email,
+                'mobile' => $mobile,
                 'id[!]' => $id,
             ];
         } else {
             $where = [
-                'mobile' => $email,
+                'mobile' => $mobile,
             ];
         }
 

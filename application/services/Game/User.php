@@ -235,7 +235,7 @@ class User extends \Service
             }
 
             $info['vip_status'] = $vip['data']['status'];
-            $info['end_time'] = $vip['data']['end_time'];
+            $info['vip_end_time'] = $vip['data']['end_time'];
 
             return [
                 'status' => 1,
