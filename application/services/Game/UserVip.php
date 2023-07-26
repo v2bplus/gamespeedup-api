@@ -11,6 +11,10 @@ class UserVip extends \Service
     const STATUS_ACTIVE = 1;
     const STATUS_NOVIP = -1;
 
+    public static $status = [
+       self::STATUS_EXPIRE,self::STATUS_ACTIVE,self::STATUS_NOVIP,
+    ];
+
     public static function vipConfig()
     {
         return [
@@ -130,6 +134,40 @@ class UserVip extends \Service
                 'status' => 1,
                 'data' => $update,
                 'msg' => '',
+            ];
+        } catch (\Exception $e) {
+            return [
+                'status' => 0,
+                'msg' => $e->getMessage(),
+            ];
+        }
+    }
+
+    public static function updateStatus($post, $ext)
+    {
+        try {
+            $vipModel = new \GameUserVipModel();
+            $info = $vipModel->getInfoById($post['id'], ['id', 'user_id','status', 'start_time', 'end_time']);
+            if (!$info) {
+                throw new \Exception('信息不存在');
+            }
+            $update = [];
+            $update['status'] = $post['status'];
+            if (isset($post['start_time']) && !empty($post['start_time'])) {
+                $update['start_time'] = $post['start_time'];
+            }
+            if (isset($post['end_time']) && !empty($post['end_time'])) {
+                $update['end_time'] = $post['end_time'];
+            }
+            $vipModel->updateData($update, $post['id']);
+            if ($vipModel->getErrors()) {
+                throw new \Exception('更新信息失败');
+            }
+
+            return [
+                'status' => 1,
+                'data' => [],
+                'msg' => '保存成功',
             ];
         } catch (\Exception $e) {
             return [

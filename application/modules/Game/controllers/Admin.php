@@ -357,6 +357,45 @@ class AdminController extends \CoreController\GameAdminAbstract
         Response::renderJson(GAME_ADMIN_STATUS_SUCCESS, '处理成功', $detail['data']);
     }
 
+    public function vip_updateAction()
+    {
+        $id = $this->getPost('id', 0);
+        $status = $this->getPost('status', 0);
+        $startTime = $this->getPost('start_time', 0);
+        $endTime = $this->getPost('end_time', 0);
+        $post = [
+            'id' => $id,
+            'status' => $status,
+            'start_time' => $startTime,
+            'end_time' => $endTime,
+        ];
+        $rules = [
+            'id' => [
+                ['required', 'message' => 'ID不能为空'],
+            ],
+            'status' => [
+                ['in', UserVip::$status, 'message' => '状态不正确'],
+            ],
+            'start_time' => [
+                ['optional'],
+                ['integer', 'message' => '开始时间格式不正确'],
+            ],
+            'end_time' => [
+                ['optional'],
+                ['integer', 'message' => '结束时间格式不正确'],
+            ]
+        ];
+        $rs = Validator::customerValidate($post, $rules);
+        if (!$rs->validate()) {
+            Response::renderJson(GAME_ADMIN_STATUS_ERROR, '验证错误', $rs->errors());
+        }
+        $detail = UserVip::updateStatus($post, $this->adminId);
+        if (1 !== $detail['status']) {
+            Response::renderJson(GAME_ADMIN_STATUS_ERROR, $detail['msg']);
+        }
+        Response::renderJson(GAME_ADMIN_STATUS_SUCCESS, '处理成功', $detail['data']);
+    }
+
     public function real_updateAction()
     {
         $id = $this->getPost('id', 0);
