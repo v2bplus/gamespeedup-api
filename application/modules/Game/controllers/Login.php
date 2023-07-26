@@ -5,7 +5,7 @@ use Services\Game\Login;
 use Services\Game\User;
 use Services\Game\Common;
 
-class LoginController extends \CoreController\GameAbstract
+class LoginController extends \CoreController\GameUserAbstract
 {
     public function init()
     {

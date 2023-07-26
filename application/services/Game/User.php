@@ -223,11 +223,20 @@ class User extends \Service
     {
         try {
             $userModel = new \GameUserModel();
-            $info = $userModel->getInfoById($uid, ['id', 'nickname', 'mobile', 'email', 'uuid',  'real_status', 'last_login_time']);
+            $info = $userModel->getInfoById($uid, ['id', 'nickname', 'mobile', 'email', 'uuid', 'real_status', 'last_login_time']);
             if (!$info) {
                 throw new \Exception('信息不存在');
             }
             unset($info['php_password']);
+
+            $vip = UserVip::getInfo($uid);
+            if ($vip['status'] != 1) {
+                throw new \Exception($vip['msg']);
+            }
+
+            $info['vip_status'] = $vip['data']['status'];
+            $info['end_time'] = $vip['data']['end_time'];
+
             return [
                 'status' => 1,
                 'data' => $info,

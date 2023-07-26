@@ -212,7 +212,8 @@ class Login extends \Service
             return $return;
         }
         $return['uid'] = $userInfo['user']['id'] ?? 0;
-        $return['role'] = $userInfo['user']['role'] ?? '';
+        $return['nickname'] = $userInfo['user']['nickname'] ?? '';
+        $return['mobile'] = $userInfo['user']['mobile'] ?? '';
 
         return $return;
     }

@@ -4,14 +4,33 @@ namespace CoreController;
 
 use Http;
 use Services\Game\Common;
-abstract class GameAbstract extends CommonAbstract
+use Services\Game\Login;
+
+abstract class GameUserAbstract extends CommonAbstract
 {
     public $uid = 0;
+    public $user = [];
+    public $needLogin = true;
+    public $platform = false;
+    public $ip = null;
 
     public function init()
     {
         parent::init();
+        $this->platform = $this->getPlatform();
+        $this->ip = Http::clientIp();
         $this->disableView();
+    }
+
+    public function getPlatform()
+    {
+        $platform = Common::getPlatform();
+        if (YAF_ENVIRON == 'dev' && empty($platform)) {
+            $platform = $this->getQuery('platform') ?? $this->_getParam('platform') ?? null;
+        }
+        $this->platform = $platform;
+
+        return $this->platform;
     }
 
     public function getPost($name, $defaultValue = null, $filter = false)
@@ -42,4 +61,19 @@ abstract class GameAbstract extends CommonAbstract
 
         return 'DESC';
     }
+
+    public function checkToken()
+    {
+        $info = Login::checkUserToken();
+        if (!$info) {
+            return false;
+        }
+
+        $this->uid = $info['uid'] ?? 0;
+        $this->user['mobile'] = $info['mobile']??null;
+        $this->user['nickname'] = $info['nickname']??null;
+
+        return true;
+    }
+
 }

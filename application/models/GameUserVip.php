@@ -6,7 +6,7 @@ class GameUserVipModel extends GameBaseModel
     protected $_primary_key = 'id';
     protected $_filed = ['id', 'user_id', 'time_num', 'status', 'create_time', 'start_time', 'end_time'];
     protected $_order = [];
-    protected $_default_order = ['id' => 'DESC'];
+    protected $_default_order = ['user_vip.id' => 'DESC'];
     protected $_orderFiled = [
         // 'add_date' => 'users.add_date',
     ];
@@ -62,7 +62,7 @@ class GameUserVipModel extends GameBaseModel
         }
         $column = [$this->_table.'.id', $this->_table.'.user_id', 'user.nickname', $this->_table.'.status', $this->_table.'.start_time', $this->_table.'.end_time'];
         $join = [
-            '[>]users' => [
+            '[>]user' => [
                 'user_id' => 'id',
             ],
         ];
