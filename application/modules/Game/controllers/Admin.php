@@ -8,6 +8,7 @@ use Services\Game\Plan;
 use Services\Game\User;
 use Services\Game\UserReal;
 use Services\Game\UserVip;
+use Services\Game\Region;
 
 class AdminController extends \CoreController\GameAdminAbstract
 {
@@ -351,6 +352,48 @@ class AdminController extends \CoreController\GameAdminAbstract
     public function vip_listAction()
     {
         $detail = UserVip::getAll($this->page, $this->pageSize, $this->sortInfo);
+        if (1 !== $detail['status']) {
+            Response::renderJson(GAME_ADMIN_STATUS_ERROR, $detail['msg']);
+        }
+        Response::renderJson(GAME_ADMIN_STATUS_SUCCESS, '处理成功', $detail['data']);
+    }
+
+    public function region_listAction()
+    {
+        $detail = Region::getAll($this->page, $this->pageSize, $this->sortInfo);
+        if (1 !== $detail['status']) {
+            Response::renderJson(GAME_ADMIN_STATUS_ERROR, $detail['msg']);
+        }
+        Response::renderJson(GAME_ADMIN_STATUS_SUCCESS, '处理成功', $detail['data']);
+    }
+
+    public function region_addAction()
+    {
+        $name = $this->getPost('name', null);
+        $sort = $this->getPost('sort', 0);
+        $remark = $this->getPost('remark', null);
+        $post = [
+            'name' => $name,
+            'sort' => $sort,
+            'remark' => $remark,
+        ];
+        $rules = [
+            'name' => [
+                ['required', 'message' => '名字不能为空'],
+            ],
+            'sort' => [
+                ['integer', 'message' => '排序格式不正确'],
+            ],
+            'remark' => [
+                ['optional'],
+                ['lengthMax', 255, 'message' => '格式不正确'],
+            ],
+        ];
+        $rs = Validator::customerValidate($post, $rules);
+        if (!$rs->validate()) {
+            Response::renderJson(GAME_ADMIN_STATUS_ERROR, '验证错误', $rs->errors());
+        }
+        $detail = Region::addRegion($post);
         if (1 !== $detail['status']) {
             Response::renderJson(GAME_ADMIN_STATUS_ERROR, $detail['msg']);
         }

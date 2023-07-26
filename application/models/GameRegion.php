@@ -4,7 +4,7 @@ class GameRegionModel extends GameBaseModel
 {
     protected $_table = 'region';
     protected $_primary_key = 'id';
-    protected $_filed = ['id', 'name','remark','create_time', 'update_time'];
+    protected $_filed = ['id', 'name','sort','remark','create_time', 'update_time'];
     protected $_order = [];
     protected $_default_order = ['id' => 'DESC'];
 
@@ -17,6 +17,7 @@ class GameRegionModel extends GameBaseModel
     {
         $addArray = [];
         $addArray['name'] = $info['name'];
+        $addArray['sort'] = $info['sort'];
         $addArray['remark'] = $info['remark'];
         $addArray['create_time'] = time();
         $this->insert($addArray);
@@ -29,6 +30,7 @@ class GameRegionModel extends GameBaseModel
         $array = ['update_time' => time()];
 
         $array['name'] = $post['name'];
+        $array['sort'] = $post['sort'];
         if (isset($post['remark'])) {
             $array['remark'] = $post['remark'];
         }

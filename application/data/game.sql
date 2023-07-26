@@ -93,6 +93,7 @@ CREATE TABLE IF NOT EXISTS `gs_user_real` (
 CREATE TABLE IF NOT EXISTS `gs_region` (
   `id` int(11) unsigned NOT NULL AUTO_INCREMENT COMMENT '主键ID',
   `name` int(11) unsigned NOT NULL DEFAULT '0' COMMENT '节点的区域名字',
+  `sort` int(11) unsigned NOT NULL DEFAULT '0' COMMENT '排序(数字越大越靠前)',
   `remark` varchar(255) NOT NULL DEFAULT '' COMMENT '备注名字',
   -- `is_free` int(11) unsigned NOT NULL DEFAULT '0' COMMENT '是否免费',
   `create_time` int(11) unsigned NOT NULL DEFAULT '0' COMMENT '创建时间',
