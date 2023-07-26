@@ -92,7 +92,7 @@ CREATE TABLE IF NOT EXISTS `gs_user_real` (
 
 CREATE TABLE IF NOT EXISTS `gs_region` (
   `id` int(11) unsigned NOT NULL AUTO_INCREMENT COMMENT '主键ID',
-  `name` int(11) unsigned NOT NULL DEFAULT '0' COMMENT '节点的区域名字',
+  `name` varchar(255) NOT NULL DEFAULT '' COMMENT '节点的区域名字',
   `sort` int(11) unsigned NOT NULL DEFAULT '0' COMMENT '排序(数字越大越靠前)',
   `remark` varchar(255) NOT NULL DEFAULT '' COMMENT '备注名字',
   -- `is_free` int(11) unsigned NOT NULL DEFAULT '0' COMMENT '是否免费',
@@ -178,6 +178,9 @@ CREATE TABLE IF NOT EXISTS `gs_payment_info` (
 
 INSERT INTO `gs_admin_user` (`id`, `user_name`, `real_name`, `password`,`create_time`,`update_time`,`last_login_time`,`status`) VALUES (1, 'admin', '默认管理员', '$2y$10$FJAKYIXnRhXPLFbhBjLNI.EB0ZMwlyWeCZAOM56FcMyriez.DT9sS', 0, 0,0, 1);
 INSERT INTO `gs_user_group` (`id`, `name`, `remark`, `create_time`, `update_time`, `attribute`) VALUES (1, '默认', '默认组', 0, 0, '{\"commission_rate\":5}');
+INSERT INTO `gs_region` (`id`, `name`, `sort`,`remark`, `create_time`) VALUES (1, '亚洲',  11, '备注1',0);
+INSERT INTO `gs_region` (`id`, `name`, `sort`,`remark`, `create_time`) VALUES (2, '欧洲',  10, '备注2',0);
+INSERT INTO `gs_region` (`id`, `name`, `sort`,`remark`, `create_time`) VALUES (3, '美洲',  9, '备注3',0);
 
 -- 第二阶段
 -- 第二阶段

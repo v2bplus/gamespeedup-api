@@ -9,6 +9,7 @@ use Services\Game\User;
 use Services\Game\UserReal;
 use Services\Game\UserVip;
 use Services\Game\Region;
+use Services\Game\Games;
 
 class AdminController extends \CoreController\GameAdminAbstract
 {
@@ -394,6 +395,69 @@ class AdminController extends \CoreController\GameAdminAbstract
             Response::renderJson(GAME_ADMIN_STATUS_ERROR, '验证错误', $rs->errors());
         }
         $detail = Region::addRegion($post);
+        if (1 !== $detail['status']) {
+            Response::renderJson(GAME_ADMIN_STATUS_ERROR, $detail['msg']);
+        }
+        Response::renderJson(GAME_ADMIN_STATUS_SUCCESS, '处理成功', $detail['data']);
+    }
+
+    public function game_listAction()
+    {
+        $detail = Games::getAllList($this->page, $this->pageSize, $this->sortInfo);
+        if (1 !== $detail['status']) {
+            Response::renderJson(GAME_ADMIN_STATUS_ERROR, $detail['msg']);
+        }
+        Response::renderJson(GAME_ADMIN_STATUS_SUCCESS, '处理成功', $detail['data']);
+    }
+
+    public function game_addAction()
+    {
+        // protected $_filed = ['id', 'name', 'alias', 'type', 'logo_url', 'cover_img_url', 'rule_id', 'region_ids', 'status', 'create_time', 'update_time'];
+        $name = $this->getPost('name', null);
+        $alias = $this->getPost('alias', null);
+        $type = $this->getPost('type', null);
+        $logo_url = $this->getPost('logo_url', null);
+        $cover_img_url = $this->getPost('cover_img_url', null);
+        $status = $this->getPost('status', 0);
+        $remark = $this->getPost('remark', null);
+        $post = [
+            'name' => $name,
+            'alias' => $alias,
+            'type' => $type,
+            'logo_url' => $logo_url,
+            'cover_img_url' => $cover_img_url,
+            'status' => $status,
+            'remark' => $remark,
+        ];
+        $rules = [
+            'name' => [
+                ['required', 'message' => '游戏名字不能为空'],
+            ],
+            'alias' => [
+                ['required', 'message' => '游戏别名不能为空'],
+            ],
+            'type' => [
+                ['required', 'message' => '游戏类型不能为空'],
+            ],
+            'logo_url' => [
+                ['required', 'message' => 'logo图片地址不能为空'],
+            ],
+            'cover_img_url' => [
+                ['required', 'message' => '封面图片地址不能为空'],
+            ],
+            'status' => [
+                ['in', [0,1], 'message' => '状态不正确'],
+            ],
+            'remark' => [
+                ['optional'],
+                ['lengthMax', 255, 'message' => '格式不正确'],
+            ],
+        ];
+        $rs = Validator::customerValidate($post, $rules);
+        if (!$rs->validate()) {
+            Response::renderJson(GAME_ADMIN_STATUS_ERROR, '验证错误', $rs->errors());
+        }
+        $detail = Games::addGame($post);
         if (1 !== $detail['status']) {
             Response::renderJson(GAME_ADMIN_STATUS_ERROR, $detail['msg']);
         }
