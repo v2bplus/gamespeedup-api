@@ -181,6 +181,8 @@ INSERT INTO `gs_user_group` (`id`, `name`, `remark`, `create_time`, `update_time
 INSERT INTO `gs_region` (`id`, `name`, `sort`,`remark`, `create_time`) VALUES (1, '亚洲',  11, '备注1',0);
 INSERT INTO `gs_region` (`id`, `name`, `sort`,`remark`, `create_time`) VALUES (2, '欧洲',  10, '备注2',0);
 INSERT INTO `gs_region` (`id`, `name`, `sort`,`remark`, `create_time`) VALUES (3, '美洲',  9, '备注3',0);
+INSERT INTO `gs_region` (`id`, `name`, `sort`,`remark`, `create_time`) VALUES (4, '亚洲韩国',  11, '备注1',0);
+INSERT INTO `gs_region` (`id`, `name`, `sort`,`remark`, `create_time`) VALUES (5, '亚洲中国台湾',  11, '备注1',0);
 
 -- 第二阶段
 -- 第二阶段

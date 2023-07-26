@@ -412,7 +412,6 @@ class AdminController extends \CoreController\GameAdminAbstract
 
     public function game_addAction()
     {
-        // protected $_filed = ['id', 'name', 'alias', 'type', 'logo_url', 'cover_img_url', 'rule_id', 'region_ids', 'status', 'create_time', 'update_time'];
         $name = $this->getPost('name', null);
         $alias = $this->getPost('alias', null);
         $type = $this->getPost('type', null);
@@ -437,7 +436,7 @@ class AdminController extends \CoreController\GameAdminAbstract
                 ['required', 'message' => '游戏别名不能为空'],
             ],
             'type' => [
-                ['required', 'message' => '游戏类型不能为空'],
+                ['in', Games::$types, 'message' => '游戏类型不正确'],
             ],
             'logo_url' => [
                 ['required', 'message' => 'logo图片地址不能为空'],
@@ -481,7 +480,7 @@ class AdminController extends \CoreController\GameAdminAbstract
                 ['required', 'message' => 'ID不能为空'],
             ],
             'status' => [
-                ['in', UserVip::$status, 'message' => '状态不正确'],
+                ['in', UserVip::$status, 'message' => '状态类型不正确'],
             ],
             'start_time' => [
                 ['optional'],

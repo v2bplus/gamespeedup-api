@@ -4,6 +4,14 @@ namespace Services\Game;
 
 class Games extends \Service
 {
+    const TYPES_PC = 1;
+    const TYPES_ANDROID = 2;
+    const TYPES_IOS = 3;
+    const TYPES_PS = 4;
+
+    public static $types = [
+        self::TYPES_PC,self::TYPES_ANDROID,self::TYPES_IOS,self::TYPES_PS
+    ];
     // 增加游戏
     public static function addGame($post)
     {
