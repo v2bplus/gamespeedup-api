@@ -51,7 +51,7 @@ CREATE TABLE IF NOT EXISTS `gs_user_vip` (
   `id` int(11) unsigned NOT NULL AUTO_INCREMENT COMMENT '主键ID',
   `user_id` int(11) UNSIGNED NULL DEFAULT 0 COMMENT '用户id',
   `time_num` int(11) UNSIGNED NULL DEFAULT 0 COMMENT '次数',
-  `status` tinyint(1) NOT NULL DEFAULT '1' COMMENT '-1:不是VIP 0：过期 1：正常',
+  `status` tinyint(1) NOT NULL DEFAULT '-1' COMMENT '-1:不是VIP 0：过期 1：正常',
   `create_time` int(11) unsigned NOT NULL DEFAULT '0' COMMENT '创建时间',
   `start_time` int(11) unsigned NOT NULL DEFAULT '0' COMMENT '开始时间',
   `end_time` int(11) unsigned NOT NULL DEFAULT '0' COMMENT '结束时间',

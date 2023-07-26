@@ -7,6 +7,7 @@ use Services\Game\Group;
 use Services\Game\Plan;
 use Services\Game\User;
 use Services\Game\UserReal;
+use Services\Game\UserVip;
 
 class AdminController extends \CoreController\GameAdminAbstract
 {
@@ -341,6 +342,15 @@ class AdminController extends \CoreController\GameAdminAbstract
     public function real_listAction()
     {
         $detail = UserReal::getAll($this->page, $this->pageSize, $this->sortInfo);
+        if (1 !== $detail['status']) {
+            Response::renderJson(GAME_ADMIN_STATUS_ERROR, $detail['msg']);
+        }
+        Response::renderJson(GAME_ADMIN_STATUS_SUCCESS, '处理成功', $detail['data']);
+    }
+
+    public function vip_listAction()
+    {
+        $detail = UserVip::getAll($this->page, $this->pageSize, $this->sortInfo);
         if (1 !== $detail['status']) {
             Response::renderJson(GAME_ADMIN_STATUS_ERROR, $detail['msg']);
         }

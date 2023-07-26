@@ -99,10 +99,6 @@ class GameAdminUserModel extends GameBaseModel
             $array['remark'] = $post['remark'];
         }
 
-        if (isset($post['expire_time'])) {
-            $array['expire_time'] = $post['expire_time'];
-        }
-
         if (!$array) {
             return false;
         }
