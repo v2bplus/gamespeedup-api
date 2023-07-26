@@ -19,6 +19,12 @@ abstract class GameUserAbstract extends CommonAbstract
         parent::init();
         $this->platform = $this->getPlatform();
         $this->ip = Http::clientIp();
+        if ($this->needLogin) {
+            $check = $this->checkToken();
+            if (!$check) {
+                \Response::renderJson(GAME_USER_STATUS_NOT_LOGGED, '登陆过期');
+            }
+        }
         $this->disableView();
     }
 
