@@ -410,7 +410,7 @@ class AdminController extends \CoreController\GameAdminAbstract
         ];
         $rules = [
             'type' => [
-                ['in', Common::$tree, 'message' => '游戏类型不正确'],
+                ['in', Common::$treeType, 'message' => '数据类型不正确'],
             ],
         ];
         $rs = Validator::customerValidate($post, $rules);

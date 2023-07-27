@@ -21,7 +21,7 @@ class Common extends \Service
 
     const TOKEN_CODE_CACHE_TIME = 600;
 
-    public static $tree = [
+    public static $treeType = [
         'region'
     ];
 
