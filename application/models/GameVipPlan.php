@@ -74,6 +74,17 @@ class GameVipPlanModel extends GameBaseModel
         ]);
     }
 
+    public function getAll($column = '')
+    {
+        if (empty($column)) {
+            $column = $this->_filed;
+        }
+        $where = [];
+        $where['ORDER'] = ['id' => 'ASC'];
+
+        return $this->fetchAll($where, $column);
+    }
+
     public function getList($page, $pageSize, $column = null, $condition = [], $order = [])
     {
         $where = [

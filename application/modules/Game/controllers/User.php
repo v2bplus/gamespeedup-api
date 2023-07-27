@@ -4,6 +4,8 @@
 use Http;
 use Services\Game\User;
 use Services\Game\Plan;
+use Services\Game\Order;
+use Services\Game\Payment;
 
 class UserController extends \CoreController\GameUserAbstract
 {
@@ -47,4 +49,37 @@ class UserController extends \CoreController\GameUserAbstract
         }
         Response::renderJson(GAME_USER_STATUS_SUCCESS, '处理成功', $detail['data']);
     }
+
+    public function order_addAction()
+    {
+        $planId = $this->getPost('plan_id', 0);
+        $post = [
+            'plan_id' => $planId
+        ];
+        $rules = [
+            'plan_id' => [
+                ['required', 'message' => '订阅id不能为空'],
+                ['integer', 'message' => '套餐格式不正确'],
+            ]
+        ];
+        $rs = Validator::customerValidate($post, $rules);
+        if (!$rs->validate()) {
+            Response::renderJson(GAME_USER_STATUS_ERROR, '验证错误', $rs->errors());
+        }
+        $detail = Order::save($post, $this->uid);
+        if (1 !== $detail['status']) {
+            Response::renderJson(GAME_USER_STATUS_ERROR, $detail['msg']);
+        }
+        Response::renderJson(GAME_USER_STATUS_SUCCESS, '处理成功', $detail['data']);
+    }
+
+    public function payment_methodAction()
+    {
+        $detail = Payment::getPaymentMethod();
+        if (1 !== $detail['status']) {
+            Response::renderJson(GAME_USER_STATUS_ERROR, $detail['msg']);
+        }
+        Response::renderJson(GAME_USER_STATUS_SUCCESS, '处理成功', $detail['data']);
+    }
 }
+

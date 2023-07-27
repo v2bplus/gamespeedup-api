@@ -147,7 +147,7 @@ CREATE TABLE IF NOT EXISTS `gs_order` (
   `total_amount` int(11) NOT NULL DEFAULT '0' COMMENT '订单支付总金额(分)',
   `invite_user_id` int(11) DEFAULT NULL COMMENT '邀请的用户id',
   `commission_balance` int(11) NOT NULL DEFAULT '0' COMMENT '佣金',
-  `pay_type` tinyint(4) unsigned NOT NULL COMMENT '支付类型',
+  `pay_type` tinyint(4) unsigned DEFAULT '0' COMMENT '支付类型',
   `status` tinyint(1) NOT NULL DEFAULT '0' COMMENT '0:待支付 1:已完成 2:已取消',
   `create_time` int(11) unsigned NOT NULL DEFAULT '0' COMMENT '创建时间',
   `update_time` int(11) unsigned NOT NULL DEFAULT '0' COMMENT '更新时间',
