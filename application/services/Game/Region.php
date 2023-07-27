@@ -4,6 +4,20 @@ namespace Services\Game;
 
 class Region extends \Service
 {
+    public static function getNameList()
+    {
+        $regionModel = new \GameRegionModel();
+        $data = [];
+        $list = $regionModel->getAll(['id',  'name']);
+        if ($list) {
+            foreach ($list as $item) {
+                $data[$item['id']] = $item;
+            }
+        }
+        sort($data);
+        return $data;
+    }
+
     // 增加区域
     public static function addRegion($post)
     {

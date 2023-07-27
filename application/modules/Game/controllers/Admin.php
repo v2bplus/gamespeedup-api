@@ -401,6 +401,15 @@ class AdminController extends \CoreController\GameAdminAbstract
         Response::renderJson(GAME_ADMIN_STATUS_SUCCESS, '处理成功', $detail['data']);
     }
 
+    public function tree_region_listAction()
+    {
+        $tree = Region::getNameList();
+        $return = [
+            'items' => $tree,
+        ];
+        Response::renderJson(GAME_ADMIN_STATUS_SUCCESS, '处理成功', $return);
+    }
+
     public function game_listAction()
     {
         $detail = Games::getAllList($this->page, $this->pageSize, $this->sortInfo);
@@ -417,6 +426,7 @@ class AdminController extends \CoreController\GameAdminAbstract
         $type = $this->getPost('type', null);
         $logo_url = $this->getPost('logo_url', null);
         $cover_img_url = $this->getPost('cover_img_url', null);
+        $region_ids = $this->getPost('region_ids', null);
         $status = $this->getPost('status', 0);
         $remark = $this->getPost('remark', null);
         $post = [
@@ -425,6 +435,7 @@ class AdminController extends \CoreController\GameAdminAbstract
             'type' => $type,
             'logo_url' => $logo_url,
             'cover_img_url' => $cover_img_url,
+            'region_ids' => $region_ids,
             'status' => $status,
             'remark' => $remark,
         ];
@@ -443,6 +454,10 @@ class AdminController extends \CoreController\GameAdminAbstract
             ],
             'cover_img_url' => [
                 ['required', 'message' => '封面图片地址不能为空'],
+            ],
+            'region_ids' => [
+                ['optional'],
+                ['array', 'message' => '区域格式不正确'],
             ],
             'status' => [
                 ['in', [0,1], 'message' => '状态不正确'],
