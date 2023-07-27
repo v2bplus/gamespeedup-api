@@ -79,6 +79,37 @@ class Plan extends \Service
         }
     }
 
+    public static function getAll($uid)
+    {
+        try {
+            $where = [
+                'show' => 1,
+                'ORDER' => ['sort' => 'DESC'],
+            ];
+            $planModel = new \GameVipPlanModel();
+            $column = ['id', 'plan_name', 'money', 'day_time', 'gift_day_time', 'content'];
+            $list = $planModel->getList(1, 20, $column, $where);
+
+            if (!$list) {
+                return [
+                    'status' => 1,
+                    'data' => [],
+                ];
+            }
+
+            return [
+                'status' => 1,
+                'data' => $list,
+                'msg' => '',
+            ];
+        } catch (\Exception $e) {
+            return [
+                'status' => 0,
+                'msg' => $e->getMessage(),
+            ];
+        }
+    }
+
     public static function getInfo($planId, $uid)
     {
         try {

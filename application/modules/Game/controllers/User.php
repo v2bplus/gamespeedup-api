@@ -3,6 +3,7 @@
 // user模块
 use Http;
 use Services\Game\User;
+use Services\Game\Plan;
 
 class UserController extends \CoreController\GameUserAbstract
 {
@@ -32,6 +33,15 @@ class UserController extends \CoreController\GameUserAbstract
     public function myinfoAction()
     {
         $detail = User::getUserInfo($this->uid);
+        if (1 !== $detail['status']) {
+            Response::renderJson(GAME_USER_STATUS_ERROR, $detail['msg']);
+        }
+        Response::renderJson(GAME_USER_STATUS_SUCCESS, '处理成功', $detail['data']);
+    }
+
+    public function plan_listAction()
+    {
+        $detail = Plan::getAll($this->uid);
         if (1 !== $detail['status']) {
             Response::renderJson(GAME_USER_STATUS_ERROR, $detail['msg']);
         }

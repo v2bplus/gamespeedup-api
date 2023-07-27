@@ -29,7 +29,7 @@ class Games extends \Service
             $gameInfo['type'] = $post['type'];
             $gameInfo['logo_url'] = $post['logo_url'];
             $gameInfo['cover_img_url'] = $post['cover_img_url'];
-            $gameInfo['region_ids'] = $post['region_ids'];
+            $gameInfo['region_ids'] = $post['region_ids']??[];
             $gameInfo['status'] = $post['status'];
 
             $id = $gameModel->addData($gameInfo);
