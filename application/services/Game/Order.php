@@ -13,7 +13,7 @@ class Order extends \Service
         1, 2,
     ];
 
-    public static function save($post, $uid)
+    public static function createOrder($post, $uid)
     {
         try {
             $userModel = new \GameUserModel();
@@ -22,6 +22,8 @@ class Order extends \Service
                 throw new \Exception('用户信息不存在');
             }
             $planId = $post['plan_id'];
+            $orderType = $post['type'];
+
             $rs = Plan::getInfo($planId);
             if (1 != $rs['status']) {
                 throw new \Exception($rs['msg']);
@@ -40,6 +42,7 @@ class Order extends \Service
             $addArray['plan_id'] = $planId;
             $addArray['invite_user_id'] = $inviteUserId;
             $addArray['order_no'] = $orderNo;
+            $addArray['order_type'] = $orderType;
             $addArray['total_amount'] = $money;
             $addArray['status'] = self::STATUS_0;
 

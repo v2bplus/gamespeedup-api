@@ -54,7 +54,8 @@ class UserController extends \CoreController\GameUserAbstract
     {
         $planId = $this->getPost('plan_id', 0);
         $post = [
-            'plan_id' => $planId
+            'plan_id' => $planId,
+            'type' => 1,
         ];
         $rules = [
             'plan_id' => [
@@ -66,7 +67,7 @@ class UserController extends \CoreController\GameUserAbstract
         if (!$rs->validate()) {
             Response::renderJson(GAME_USER_STATUS_ERROR, '验证错误', $rs->errors());
         }
-        $detail = Order::save($post, $this->uid);
+        $detail = Order::createOrder($post, $this->uid);
         if (1 !== $detail['status']) {
             Response::renderJson(GAME_USER_STATUS_ERROR, $detail['msg']);
         }
