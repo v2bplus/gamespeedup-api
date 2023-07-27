@@ -4,6 +4,20 @@ namespace Services\Game;
 
 class Plan extends \Service
 {
+    public static function getNameList()
+    {
+        $planModel = new \GameVipPlanModel();
+        $data = [];
+        $list = $planModel->getAll(['id',  'plan_name']);
+        if ($list) {
+            foreach ($list as $item) {
+                $data[$item['id']] = $item;
+            }
+        }
+        sort($data);
+        return $data;
+    }
+
     public static function addPlan($post)
     {
         try {
@@ -110,7 +124,7 @@ class Plan extends \Service
         }
     }
 
-    public static function getInfo($planId, $uid)
+    public static function getInfo($planId)
     {
         try {
             $planModel = new \GameVipPlanModel();
