@@ -4,6 +4,7 @@ namespace Services\Game;
 use Exception;
 use Http;
 use Services\Api\CaptchaApi;
+use Services\Game\Region;
 
 class Common extends \Service
 {
@@ -20,6 +21,10 @@ class Common extends \Service
 
     const TOKEN_CODE_CACHE_TIME = 600;
 
+    public static $tree = [
+        'region'
+    ];
+
     public static function getPlatform()
     {
         $plat = strtoupper(Http::getHttpHeader('platform'));
@@ -27,6 +32,29 @@ class Common extends \Service
             return 'None';
         }
         return $plat;
+    }
+
+    public static function treeList($type)
+    {
+        try {
+
+            if ($type == 'region') {
+                $list = Region::getNameList();
+            }
+            $return = [
+                'items' => $list,
+            ];
+            return [
+                'status' => 1,
+                'data' =>$return,
+                'msg' => ''
+            ];
+        } catch (\Exception $e) {
+            return [
+                'status' => 0,
+                'msg' => $e->getMessage()
+            ];
+        }
     }
 
     public static function captcha($codeLength = 4)

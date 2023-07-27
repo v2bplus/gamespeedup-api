@@ -1,15 +1,16 @@
 <?php
 
 // admin模块
-use Services\Game\Login;
 use Services\Game\AdminUser;
+use Services\Game\Common;
+use Services\Game\Games;
 use Services\Game\Group;
+use Services\Game\Login;
 use Services\Game\Plan;
+use Services\Game\Region;
 use Services\Game\User;
 use Services\Game\UserReal;
 use Services\Game\UserVip;
-use Services\Game\Region;
-use Services\Game\Games;
 
 class AdminController extends \CoreController\GameAdminAbstract
 {
@@ -195,7 +196,7 @@ class AdminController extends \CoreController\GameAdminAbstract
             'gift_day_time' => $gift_day_time,
             'content' => $content,
             'show' => $show,
-            'sort' => $sort
+            'sort' => $sort,
         ];
         $rules = [
             'plan_name' => [
@@ -401,13 +402,26 @@ class AdminController extends \CoreController\GameAdminAbstract
         Response::renderJson(GAME_ADMIN_STATUS_SUCCESS, '处理成功', $detail['data']);
     }
 
-    public function tree_region_listAction()
+    public function tree_listAction()
     {
-        $tree = Region::getNameList();
-        $return = [
-            'items' => $tree,
+        $type = $this->getPost('type', null);
+        $post = [
+            'type' => $type,
         ];
-        Response::renderJson(GAME_ADMIN_STATUS_SUCCESS, '处理成功', $return);
+        $rules = [
+            'type' => [
+                ['in', Common::$tree, 'message' => '游戏类型不正确'],
+            ],
+        ];
+        $rs = Validator::customerValidate($post, $rules);
+        if (!$rs->validate()) {
+            Response::renderJson(GAME_ADMIN_STATUS_ERROR, '验证错误', $rs->errors());
+        }
+        $detail = Common::treeList($type);
+        if (1 !== $detail['status']) {
+            Response::renderJson(GAME_ADMIN_STATUS_ERROR, $detail['msg']);
+        }
+        Response::renderJson(GAME_ADMIN_STATUS_SUCCESS, '处理成功', $detail['data']);
     }
 
     public function game_listAction()
@@ -460,7 +474,7 @@ class AdminController extends \CoreController\GameAdminAbstract
                 ['array', 'message' => '区域格式不正确'],
             ],
             'status' => [
-                ['in', [0,1], 'message' => '状态不正确'],
+                ['in', [0, 1], 'message' => '状态不正确'],
             ],
             'remark' => [
                 ['optional'],
@@ -504,7 +518,7 @@ class AdminController extends \CoreController\GameAdminAbstract
             'end_time' => [
                 ['optional'],
                 ['integer', 'message' => '结束时间格式不正确'],
-            ]
+            ],
         ];
         $rs = Validator::customerValidate($post, $rules);
         if (!$rs->validate()) {
