@@ -410,6 +410,7 @@ class AdminController extends \CoreController\GameAdminAbstract
         ];
         $rules = [
             'type' => [
+                ['required', 'message' => '数据类型不能为空'],
                 ['in', Common::$treeType, 'message' => '数据类型不正确'],
             ],
         ];
@@ -461,6 +462,7 @@ class AdminController extends \CoreController\GameAdminAbstract
                 ['required', 'message' => '游戏别名不能为空'],
             ],
             'type' => [
+                ['required', 'message' => '游戏类型不能为空'],
                 ['in', Games::$types, 'message' => '游戏类型不正确'],
             ],
             'logo_url' => [
