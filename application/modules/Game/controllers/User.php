@@ -74,6 +74,31 @@ class UserController extends \CoreController\GameUserAbstract
         Response::renderJson(GAME_USER_STATUS_SUCCESS, '处理成功', $detail['data']);
     }
 
+    //结账
+    public function order_checkoutAction()
+    {
+        $tradeNo = $this->getPost('trade_no', 0);
+        $post = [
+            'trade_no' => $tradeNo,
+            'type' => 1,
+        ];
+        $rules = [
+            'trade_no' => [
+                ['required', 'message' => '订单号不能为空'],
+                ['integer', 'message' => '订单号格式不正确'],
+            ]
+        ];
+        $rs = Validator::customerValidate($post, $rules);
+        if (!$rs->validate()) {
+            Response::renderJson(GAME_USER_STATUS_ERROR, '验证错误', $rs->errors());
+        }
+        $detail = Order::checkout($post, $this->uid);
+        if (1 !== $detail['status']) {
+            Response::renderJson(GAME_USER_STATUS_ERROR, $detail['msg']);
+        }
+        Response::renderJson(GAME_USER_STATUS_SUCCESS, '处理成功', $detail['data']);
+    }
+
     public function payment_methodAction()
     {
         $detail = Payment::getPaymentMethod();

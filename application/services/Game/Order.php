@@ -68,6 +68,23 @@ class Order extends \Service
         }
     }
 
+    public static function checkout($post, $uid)
+    {
+        try {
+            Payment::pay();
+            return [
+                'status' => 1,
+                'data' => [],
+                'msg' => '',
+            ];
+        } catch (\Exception $e) {
+            return [
+                'status' => 0,
+                'msg' => $e->getMessage(),
+            ];
+        }
+    }
+
     public static function check($tradeNo, $uid)
     {
         try {
