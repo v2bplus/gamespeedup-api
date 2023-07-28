@@ -85,11 +85,11 @@ class Order extends \Service
         }
     }
 
-    public static function check($tradeNo, $uid)
+    public static function check($post, $uid)
     {
         try {
             $orderModel = new \GameOrderModel();
-
+            $tradeNo = $post['order_no'] ?? 0;
             $where = ['order_no' => $tradeNo, 'user_id' => $uid];
             $check = $orderModel->checkExist($where);
             if (!$check) {
