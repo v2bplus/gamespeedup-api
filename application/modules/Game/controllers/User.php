@@ -77,13 +77,13 @@ class UserController extends \CoreController\GameUserAbstract
     //结账
     public function order_checkoutAction()
     {
-        $tradeNo = $this->getPost('trade_no', 0);
+        $tradeNo = $this->getPost('order_no', 0);
         $post = [
-            'trade_no' => $tradeNo,
+            'order_no' => $tradeNo,
             'type' => 1,
         ];
         $rules = [
-            'trade_no' => [
+            'order_no' => [
                 ['required', 'message' => '订单号不能为空'],
                 ['integer', 'message' => '订单号格式不正确'],
             ]
