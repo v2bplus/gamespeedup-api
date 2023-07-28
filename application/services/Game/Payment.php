@@ -22,10 +22,13 @@ class Payment extends \Service
                 throw new \Exception($rs['msg']);
             }
             $gate = self::$payment;
-            $url = $gate::unify();
+            $rs = $gate::unify();
+            if (1 != $rs['status']) {
+                throw new \Exception($rs['msg']);
+            }
             $return = [
                 'type' => 1,
-                'data' => $url
+                'data' => $rs['data']
             ];
             return [
                 'status' => 1,
