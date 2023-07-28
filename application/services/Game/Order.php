@@ -71,10 +71,25 @@ class Order extends \Service
     public static function checkout($post, $uid)
     {
         try {
-            Payment::pay();
+            $orderModel = new \GameOrderModel();
+            $tradeNo = $post['order_no'] ?? 0;
+            $where = ['order_no' => $tradeNo, 'user_id' => $uid];
+            $check = $orderModel->checkExist($where);
+            $paymentInfo = [];
+            if (!$check) {
+                $paymentInfo = ['status' => 0];
+
+                return [
+                    'status' => 1,
+                    'data' => $paymentInfo,
+                    'msg' => '',
+                ];
+            }
+            $rs = Payment::pay();
+            $paymentInfo = $rs['data'];
             return [
                 'status' => 1,
-                'data' => [],
+                'data' => $paymentInfo,
                 'msg' => '',
             ];
         } catch (\Exception $e) {
