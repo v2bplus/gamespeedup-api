@@ -9,6 +9,7 @@ use Services\Game\Login;
 use Services\Game\Plan;
 use Services\Game\Region;
 use Services\Game\User;
+use Services\Game\Order;
 use Services\Game\UserReal;
 use Services\Game\UserVip;
 
@@ -527,6 +528,15 @@ class AdminController extends \CoreController\GameAdminAbstract
             Response::renderJson(GAME_ADMIN_STATUS_ERROR, '验证错误', $rs->errors());
         }
         $detail = UserVip::updateStatus($post, $this->adminId);
+        if (1 !== $detail['status']) {
+            Response::renderJson(GAME_ADMIN_STATUS_ERROR, $detail['msg']);
+        }
+        Response::renderJson(GAME_ADMIN_STATUS_SUCCESS, '处理成功', $detail['data']);
+    }
+
+    public function order_listAction()
+    {
+        $detail = Order::getAllList($this->page, $this->pageSize, $this->sortInfo);
         if (1 !== $detail['status']) {
             Response::renderJson(GAME_ADMIN_STATUS_ERROR, $detail['msg']);
         }
