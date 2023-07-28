@@ -183,14 +183,10 @@ class Order extends \Service
                 ];
             }
 
-            $planList = Plan::getNameList();
+            // $planList = Plan::getNameList();
 
             if ($list['items']) {
                 foreach ($list['items'] as $index => $v) {
-                    $list['items'][$index]['plan_name'] = null;
-                    if (isset($planList[$v['plan_id']])) {
-                        $list['items'][$index]['plan_name'] = $planList[$v['plan_id']]['name'];
-                    }
                     $total_amount = $list['items'][$index]['total_amount'];
                     if ($total_amount) {
                         $list['items'][$index]['total_amount'] = bcdiv((string) $total_amount, '100', 2);
