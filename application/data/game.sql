@@ -25,6 +25,7 @@ CREATE TABLE IF NOT EXISTS `gs_user` (
   `plan_id` int(11) NOT NULL DEFAULT '0' COMMENT '当前使用的订阅ID',
   `invite_user_id` int(11) DEFAULT NULL COMMENT '邀请的用户id',
   `group_id` int(11) unsigned DEFAULT 1 COMMENT '用户组id',
+  `password` varchar(255) NOT NULL DEFAULT '' COMMENT 'php_password的md5值，sha224',
   `php_password` varchar(255) NOT NULL DEFAULT '' COMMENT '原始密码的php密码值',
   `create_time` int(11) unsigned NOT NULL DEFAULT '0' COMMENT '创建时间',
   `update_time` int(11) unsigned NOT NULL DEFAULT '0' COMMENT '更新时间',
@@ -100,7 +101,7 @@ CREATE TABLE IF NOT EXISTS `gs_region` (
   `update_time` int(11) unsigned NOT NULL DEFAULT '0' COMMENT '更新时间',
   PRIMARY KEY (`id`),
   KEY `name` (`name`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='区域列表';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='游戏区域列表';
 
 CREATE TABLE IF NOT EXISTS `gs_game` (
   `id` int(11) unsigned NOT NULL AUTO_INCREMENT COMMENT '主键ID',
@@ -138,6 +139,36 @@ CREATE TABLE IF NOT EXISTS `gs_node` (
   PRIMARY KEY (`id`),
   KEY `region_id` (`region_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='服务节点列表';
+
+CREATE TABLE IF NOT EXISTS `gs_net_region` (
+  `id` int(11) unsigned NOT NULL AUTO_INCREMENT COMMENT '主键ID',
+  `name` varchar(255) NOT NULL DEFAULT '' COMMENT '加速节点的区域名字',
+  `sort` int(11) unsigned NOT NULL DEFAULT '0' COMMENT '排序(数字越大越靠前)',
+  `create_time` int(11) unsigned NOT NULL DEFAULT '0' COMMENT '创建时间',
+  `update_time` int(11) unsigned NOT NULL DEFAULT '0' COMMENT '更新时间',
+  PRIMARY KEY (`id`),
+  KEY `name` (`name`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='网络加速区域列表';
+
+CREATE TABLE IF NOT EXISTS `gs_net_node` (
+  `id` int(11) unsigned NOT NULL AUTO_INCREMENT COMMENT '主键ID',
+  `name` varchar(255) NOT NULL DEFAULT '' COMMENT '节点名称',
+  `region_net_id` int(11) unsigned NOT NULL DEFAULT '0' COMMENT '节点的区域id',
+  `region_net_name` int(11) unsigned NOT NULL DEFAULT '0' COMMENT '节点的区域名字(冗余字段)',
+  `protocol` varchar(255) NOT NULL DEFAULT '' COMMENT '节点协议类型',
+  `host_addr` varchar(255) NOT NULL DEFAULT '' COMMENT '节点服务器地址',
+  `host_port` varchar(255) NOT NULL DEFAULT '' COMMENT '节点服务器端口',
+  `allow_insecure` tinyint(1) NOT NULL DEFAULT '0' COMMENT '是否允许不安全',
+  `capacity_limit` int(11) DEFAULT '-1' COMMENT '容纳最大用户量（-1 不限制）',
+  `json_values` text NOT NULL COMMENT '更多设置内容(json格式)',
+  `sort` int(11) unsigned NOT NULL DEFAULT '0' COMMENT '排序(数字越大越靠前)',
+  `status` int(11) unsigned NOT NULL DEFAULT '0' COMMENT '状态(1启用 0禁用)',
+  `create_time` int(11) unsigned NOT NULL DEFAULT '0' COMMENT '创建时间',
+  `update_time` int(11) unsigned NOT NULL DEFAULT '0' COMMENT '更新时间',
+  `remark` varchar(255) NOT NULL DEFAULT '' COMMENT '备注',
+  PRIMARY KEY (`id`),
+  KEY `region_id` (`region_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='网络加速服务节点列表';
 
 CREATE TABLE IF NOT EXISTS `gs_order` (
   `id` int(11) unsigned NOT NULL AUTO_INCREMENT COMMENT '主键ID',
